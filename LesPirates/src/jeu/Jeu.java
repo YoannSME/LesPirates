@@ -56,15 +56,11 @@ public class Jeu {
 		boolean partieFinie = false;
 		while (!partieFinie) {
 			tourDeJeu(pirateBill);
-			if (pirateBill.aGagne()) {
-				partieFinie = true;
-			} else {
-				tourDeJeu(pirateJack);
-				if (pirateJack.aGagne()) {
-					partieFinie = true;
-				}
+			partieFinie = pirateBill.aGagne();
+			tourDeJeu(pirateJack);
+			partieFinie = pirateJack.aGagne();
 			}
-		}
+		
 	}
 
 	public static void main(String[] args) {
