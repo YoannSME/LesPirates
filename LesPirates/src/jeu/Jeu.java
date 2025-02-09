@@ -23,15 +23,16 @@ public class Jeu {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void remplirPioche(Carte carte) {
-		if(nbCartes<50) {
+		if (nbCartes < 50) {
 			pioche[nbCartes] = carte;
 			nbCartes++;
 		}
 	}
+
 	public Carte piocherCarte() {
 		Carte cartePiochee = null;
 		if (nbCartes > 0) {
@@ -40,45 +41,44 @@ public class Jeu {
 		}
 		return cartePiochee;
 	}
-	
+
 	private void tourDeJeu(Pirate pirate) {
-		//TODO Faire la logique de jeu : Permettre au joueur de choisir une carte dans sa main
+		// TODO Faire la logique de jeu : Permettre au joueur de choisir une carte dans
+		// sa main
 		Carte cartePiochee = pirate.piocherCarte(this);
-		System.out.println("Pirate "+pirate.getNom());
+		System.out.println("Pirate " + pirate.getNom());
 		affichage.afficherMain(pirate);
 		pirate.ajouterDansZone(cartePiochee);
-	
+
 	}
 
-	
 	public void lancerJeu() {
 		boolean partieFinie = false;
-		while(!partieFinie) {
+		while (!partieFinie) {
 			tourDeJeu(pirateBill);
-			if(pirateBill.aGagne()) {
+			if (pirateBill.aGagne()) {
 				partieFinie = true;
-			}
-			else {
+			} else {
 				tourDeJeu(pirateJack);
-				if(pirateJack.aGagne()) {
+				if (pirateJack.aGagne()) {
 					partieFinie = true;
 				}
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		Jeu jeu = new Jeu();
-		CartePopularite abordageReussi = new CartePopularite(TypePopularite.AbordageReussi,2);
-		CartePopularite discoursInspirant = new CartePopularite(TypePopularite.DiscoursInspirant,1);
-		for(int i = 0;i<25;i++) {
-			jeu.remplirPioche(abordageReussi);
+		CartePopularite abordageReussi = new CartePopularite(TypePopularite.AbordageReussi, 0,2);
+		CartePopularite discoursInspirant = new CartePopularite(TypePopularite.DiscoursInspirant,0, 1);
+		CartePopularite maindefer = new CartePopularite(TypePopularite.MainDeFer,1,2);
+		for (int i = 0; i < 25; i++) {
+			jeu.remplirPioche(maindefer);
 			jeu.remplirPioche(discoursInspirant);
 		}
-		
+
 		jeu.lancerJeu();
-		
-		
+
 	}
 
 }
