@@ -1,7 +1,7 @@
 package cartes;
 
 public enum TypeSpecial implements TypeCarte {
-	ChangementDeck("Changement de Deck");
+	SwapDeck("Changement de Deck");
 
 	;
 

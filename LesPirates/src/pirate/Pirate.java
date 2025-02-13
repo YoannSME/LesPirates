@@ -32,6 +32,10 @@ public class Pirate {
 	public Carte[] getMain() {
 		return main;
 	}
+	
+	public String toString() {
+		return "Le Pirate "+nom;
+	}
 
 	public String getNom() {
 		return nom;
@@ -48,7 +52,7 @@ public class Pirate {
 		return pv;
 	}
 
-	public Carte piocherCarte(Jeu jeu) {
+	public void piocherCarte(Jeu jeu) {
 		Carte cartePiochee = null;
 		if (nbCartesEnMain < TAILLE_MAX) {
 			cartePiochee = jeu.piocherCarte();
@@ -57,7 +61,6 @@ public class Pirate {
 				nbCartesEnMain++;
 			}
 		}
-		return cartePiochee;
 
 	}
 	
@@ -66,12 +69,24 @@ public class Pirate {
 		int choix = affichage.afficherChoisirCarte(this);
 		Carte carteChoisie = main[choix-1];
 		affichage.afficherCarte(carteChoisie);
+		defausserCarte(choix-1);
 		return carteChoisie;
 	}
 
-	public void attaquerPirate(Pirate pirate, Carte carte) {
+	public void attaquerPirate(Pirate pirate, CarteAttaque carte) {
+		affichage.afficherAttaquePirate(this, pirate, carte);
 		pirate.subirEffetCarte(carte);
 		
+	}
+	
+	public void defausserCarte(int index) {
+		
+		for(int i = index;i<nbCartesEnMain-1;i++) {
+			main[i] = main[i+1];
+		}
+		main[nbCartesEnMain] = null;
+		if (nbCartesEnMain>0)
+			nbCartesEnMain--;
 	}
 	
 	public void subirEffetCarte(Carte carte) {
@@ -85,7 +100,7 @@ public class Pirate {
 		}
 		if (carte instanceof CarteAttaque carteAttaque && nbCartesZoneAttaque < TAILLE_MAX) {
 			zoneAttaque[nbCartesZoneAttaque] = carteAttaque;
-			nbCartesZoneAttaque--;
+			nbCartesZoneAttaque++;
 			perdreVie(carteAttaque.getNbDegats());
 			
 			affichage.afficherPerdreVie(this, carteAttaque.getNbDegats());
@@ -94,12 +109,14 @@ public class Pirate {
 
 	public void jouerCarte(Pirate adversaire) {
 		Carte carteAjouer = choisirCarteAJouer();
-		if(carteAjouer instanceof CarteAttaque) {
-			attaquerPirate(adversaire, carteAjouer);
+		if(carteAjouer instanceof CarteAttaque carteAttaque) {
+			attaquerPirate(adversaire, carteAttaque);
 		}
 		else {
 			subirEffetCarte(carteAjouer);
 		}
+		
+		
 	}
 
 	public void perdreVie(int vie) {
@@ -111,7 +128,14 @@ public class Pirate {
 	}
 
 	public boolean aGagne() {
-		return (pv > 0 && popularite >= 5);
+		return (!estMort() && estAssezPopulaire());
+	}
+	
+	public boolean estMort() {
+		return pv<1;
+	}
+	public boolean estAssezPopulaire() {
+		return popularite >=5;
 	}
 
 }

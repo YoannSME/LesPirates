@@ -2,8 +2,8 @@ package affichage;
 
 import java.util.Scanner;
 
-import cartes.Carte;
-import cartes.CartePopularite;
+import cartes.*;
+
 import pirate.Pirate;
 
 public class Affichage {
@@ -38,7 +38,9 @@ public class Affichage {
 			System.out.println("La main de "+pirate.getNom()+" est pleine, carte "+carte.getType()+" défaussée.");
 	}
 	
-	
+	public void afficherAttaquePirate(Pirate attaquant,Pirate victime,CarteAttaque carte) {
+		System.out.println(attaquant +" attaque "+ victime);
+	}
 	
 	public void afficherPerdreVie(Pirate pirate,int degats) {
 		System.out.println("Le Pirate "+pirate.getNom()+" a perdu "+ degats+ "PV, nouveau nombre de PV : "+pirate.getPV());
