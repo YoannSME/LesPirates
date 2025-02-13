@@ -3,11 +3,14 @@ package pirate;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import affichage.Affichage;
 import cartes.*;
 import jeu.Jeu;
 
 public class Pirate {
-
+	Affichage affichage = new Affichage();
+	
+	
 	public static final int TAILLE_MAX = 5;
 	private int pv = 5;
 	private int popularite = 0;
@@ -37,6 +40,13 @@ public class Pirate {
 	public int getNbCartes() {
 		return nbCartesEnMain;
 	}
+	public int getPopularite() {
+		return popularite;
+	}
+	
+	public int getPV() {
+		return pv;
+	}
 
 	public Carte piocherCarte(Jeu jeu) {
 		Carte cartePiochee = null;
@@ -50,28 +60,46 @@ public class Pirate {
 		return cartePiochee;
 
 	}
-
-	public void attaquerPirate(Pirate pirate, Carte carte) {
-		pirate.ajouterDansZone(carte);
-
+	
+	public Carte choisirCarteAJouer() {
+		affichage.afficherMain(this);
+		int choix = affichage.afficherChoisirCarte(this);
+		Carte carteChoisie = main[choix-1];
+		affichage.afficherCarte(carteChoisie);
+		return carteChoisie;
 	}
 
-	public void ajouterDansZone(Carte carte) {
+	public void attaquerPirate(Pirate pirate, Carte carte) {
+		pirate.subirEffetCarte(carte);
+		
+	}
+	
+	public void subirEffetCarte(Carte carte) {
 		if (carte instanceof CartePopularite cartePopularite && nbCartesPopularite < TAILLE_MAX) {
 			zonePopularite[nbCartesPopularite] = cartePopularite;
 			nbCartesPopularite++;
-			
 			gagnerPopularite(cartePopularite.getNbPopularite());
 			perdreVie(cartePopularite.getNbDegats());
-			System.out.println(nom  + " + "+cartePopularite.getNbPopularite()+" - "+cartePopularite.getNbDegats());
 			
+			affichage.afficherEffetCartePopularite(this, cartePopularite);
 		}
 		if (carte instanceof CarteAttaque carteAttaque && nbCartesZoneAttaque < TAILLE_MAX) {
 			zoneAttaque[nbCartesZoneAttaque] = carteAttaque;
 			nbCartesZoneAttaque--;
 			perdreVie(carteAttaque.getNbDegats());
+			
+			affichage.afficherPerdreVie(this, carteAttaque.getNbDegats());
 		}
+	}
 
+	public void jouerCarte(Pirate adversaire) {
+		Carte carteAjouer = choisirCarteAJouer();
+		if(carteAjouer instanceof CarteAttaque) {
+			attaquerPirate(adversaire, carteAjouer);
+		}
+		else {
+			subirEffetCarte(carteAjouer);
+		}
 	}
 
 	public void perdreVie(int vie) {
@@ -83,7 +111,7 @@ public class Pirate {
 	}
 
 	public boolean aGagne() {
-		return pv > 0 && popularite >= 5;
+		return (pv > 0 && popularite >= 5);
 	}
 
 }

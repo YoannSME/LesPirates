@@ -42,24 +42,26 @@ public class Jeu {
 		return cartePiochee;
 	}
 
-	private void tourDeJeu(Pirate pirate) {
-		// TODO Faire la logique de jeu : Permettre au joueur de choisir une carte dans
-		// sa main
-		Carte cartePiochee = pirate.piocherCarte(this);
-		System.out.println("Pirate " + pirate.getNom());
-		affichage.afficherMain(pirate);
-		pirate.ajouterDansZone(cartePiochee);
+	private void tourDeJeu(Pirate pirate1,Pirate pirate2) {
+		Carte cartePiochee = pirate1.piocherCarte(this);;
+		pirate1.jouerCarte(pirate2);
 
 	}
 
 	public void lancerJeu() {
 		boolean partieFinie = false;
 		while (!partieFinie) {
-			tourDeJeu(pirateBill);
+			tourDeJeu(pirateBill,pirateJack);
 			partieFinie = pirateBill.aGagne();
-			tourDeJeu(pirateJack);
+			tourDeJeu(pirateJack,pirateBill);
 			partieFinie = pirateJack.aGagne();
 			}
+		if(pirateBill.aGagne()) {
+			affichage.afficherGagnerPartie(pirateBill);
+		}
+		else {
+			affichage.afficherGagnerPartie(pirateJack);
+		}
 		
 	}
 
