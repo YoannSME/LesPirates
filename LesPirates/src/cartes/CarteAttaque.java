@@ -2,7 +2,7 @@ package cartes;
 
 public class CarteAttaque extends Carte {
 	private int nbDegats;
-	public CarteAttaque(TypeAttaque typeCarte, int nbDegats) {
+	public CarteAttaque(TypeCarte typeCarte, int nbDegats) {
 		super(typeCarte);
 		this.nbDegats = nbDegats;
 

@@ -9,8 +9,7 @@ import jeu.Jeu;
 
 public class Pirate {
 	Affichage affichage = new Affichage();
-	
-	
+
 	public static final int TAILLE_MAX = 5;
 	private int pv = 5;
 	private int popularite = 0;
@@ -32,9 +31,9 @@ public class Pirate {
 	public Carte[] getMain() {
 		return main;
 	}
-	
+
 	public String toString() {
-		return "Le Pirate "+nom;
+		return "Le Pirate " + nom;
 	}
 
 	public String getNom() {
@@ -44,12 +43,23 @@ public class Pirate {
 	public int getNbCartes() {
 		return nbCartesEnMain;
 	}
+
 	public int getPopularite() {
 		return popularite;
 	}
-	
+
 	public int getPV() {
 		return pv;
+	}
+
+	public String mainToString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < nbCartesEnMain; i++) {
+			sb.append(i + 1 + " - ");
+			sb.append(main[i].getType() + "\n");
+		}
+
+		return sb.toString();
 	}
 
 	public void piocherCarte(Jeu jeu) {
@@ -63,60 +73,59 @@ public class Pirate {
 		}
 
 	}
-	
+
 	public Carte choisirCarteAJouer() {
-		affichage.afficherMain(this);
-		int choix = affichage.afficherChoisirCarte(this);
-		Carte carteChoisie = main[choix-1];
-		affichage.afficherCarte(carteChoisie);
-		defausserCarte(choix-1);
+		affichage.afficherMain(nom, mainToString());
+		int choix = affichage.afficherChoisirCarte(nbCartesEnMain);
+		Carte carteChoisie = main[choix - 1];
+		affichage.afficherCarte(carteChoisie.getType());
+		defausserCarte(choix - 1);
 		return carteChoisie;
 	}
 
 	public void attaquerPirate(Pirate pirate, CarteAttaque carte) {
-		affichage.afficherAttaquePirate(this, pirate, carte);
+		affichage.afficherAttaquePirate(nom, pirate.getNom());
 		pirate.subirEffetCarte(carte);
-		
+
 	}
-	
+
 	public void defausserCarte(int index) {
-		
-		for(int i = index;i<nbCartesEnMain-1;i++) {
-			main[i] = main[i+1];
+
+		for (int i = index; i < nbCartesEnMain - 1; i++) {
+			main[i] = main[i + 1];
 		}
 		main[nbCartesEnMain] = null;
-		if (nbCartesEnMain>0)
+		if (nbCartesEnMain > 0)
 			nbCartesEnMain--;
 	}
-	
+
 	public void subirEffetCarte(Carte carte) {
 		if (carte instanceof CartePopularite cartePopularite && nbCartesPopularite < TAILLE_MAX) {
 			zonePopularite[nbCartesPopularite] = cartePopularite;
 			nbCartesPopularite++;
 			gagnerPopularite(cartePopularite.getNbPopularite());
 			perdreVie(cartePopularite.getNbDegats());
-			
-			affichage.afficherEffetCartePopularite(this, cartePopularite);
+
+			affichage.afficherEffetCartePopularite(nom, cartePopularite.getNbPopularite(),
+					cartePopularite.getNbDegats(), popularite, pv);
 		}
 		if (carte instanceof CarteAttaque carteAttaque && nbCartesZoneAttaque < TAILLE_MAX) {
 			zoneAttaque[nbCartesZoneAttaque] = carteAttaque;
 			nbCartesZoneAttaque++;
 			perdreVie(carteAttaque.getNbDegats());
-			
-			affichage.afficherPerdreVie(this, carteAttaque.getNbDegats());
+
+			affichage.afficherPerdreVie(nom, carteAttaque.getNbDegats(), pv);
 		}
 	}
 
 	public void jouerCarte(Pirate adversaire) {
 		Carte carteAjouer = choisirCarteAJouer();
-		if(carteAjouer instanceof CarteAttaque carteAttaque) {
+		if (carteAjouer instanceof CarteAttaque carteAttaque) {
 			attaquerPirate(adversaire, carteAttaque);
-		}
-		else {
+		} else {
 			subirEffetCarte(carteAjouer);
 		}
-		
-		
+
 	}
 
 	public void perdreVie(int vie) {
@@ -130,12 +139,13 @@ public class Pirate {
 	public boolean aGagne() {
 		return (!estMort() && estAssezPopulaire());
 	}
-	
+
 	public boolean estMort() {
-		return pv<1;
+		return pv < 1;
 	}
+
 	public boolean estAssezPopulaire() {
-		return popularite >=5;
+		return popularite >= 5;
 	}
 
 }
