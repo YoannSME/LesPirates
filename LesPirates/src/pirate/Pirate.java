@@ -89,7 +89,7 @@ public class Pirate {
 	
 	public void volerCarte(Pirate attaquant,Pirate victime,int nbCartesVolees) {
 		int[] indicesCartes = affichage.afficherVolerCartes(victime.getNom(),victime.mainToString(),nbCartesVolees,victime.getNbCartes());
-		
+		//Demander au pirate attaquant par quelles cartes il veut échanger celles qu'il a 
 	}
 
 	public Carte enleverCarte(int index) {
