@@ -2,8 +2,8 @@ package cartes;
 
 public class CarteAttaque extends Carte {
 	private int nbDegats;
-	public CarteAttaque(TypeCarte typeCarte, int nbDegats) {
-		super(typeCarte);
+	public CarteAttaque(TypeCarte typeCarte, int nbDegats,String description) {
+		super(typeCarte, description);
 		this.nbDegats = nbDegats;
 
 	}

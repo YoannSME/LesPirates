@@ -2,8 +2,8 @@ package cartes;
 
 public class CarteBerserker extends Carte{
 	//Survit un tour de plus
-	protected CarteBerserker(TypeCarte typeCarte) {
-		super(typeCarte);
+	public CarteBerserker(TypeCarte typeCarte,String description) {
+		super(typeCarte, description);
 		// TODO Auto-generated constructor stub
 	}
 

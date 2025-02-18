@@ -71,35 +71,40 @@ public class Pirate {
 				nbCartesEnMain++;
 			}
 		}
-
 	}
 
 	public Carte choisirCarteAJouer() {
-		affichage.afficherMain(nom, mainToString());
+		affichage.afficherMain(mainToString());
 		int choix = affichage.afficherChoisirCarte(nbCartesEnMain);
 		Carte carteChoisie = main[choix - 1];
-		affichage.afficherCarte(carteChoisie.getType());
-		defausserCarte(choix - 1);
+		affichage.detailCarte(carteChoisie.getType(), carteChoisie.getDescription());
+		enleverCarte(choix - 1);
 		return carteChoisie;
 	}
 
 	public void attaquerPirate(Pirate pirate, CarteAttaque carte) {
 		affichage.afficherAttaquePirate(nom, pirate.getNom());
 		pirate.subirEffetCarte(carte);
-
+	}
+	
+	public void volerCarte(Pirate attaquant,Pirate victime,int nbCartesVolees) {
+		int[] indicesCartes = affichage.afficherVolerCartes(victime.getNom(),victime.mainToString(),nbCartesVolees,victime.getNbCartes());
+		
 	}
 
-	public void defausserCarte(int index) {
-
+	public Carte enleverCarte(int index) {
+		Carte carte = main[index];
 		for (int i = index; i < nbCartesEnMain - 1; i++) {
 			main[i] = main[i + 1];
 		}
 		main[nbCartesEnMain] = null;
 		if (nbCartesEnMain > 0)
 			nbCartesEnMain--;
+		return carte;
 	}
 
-	public void subirEffetCarte(Carte carte) {
+	
+	private void subirEffetCarte(Carte carte) {
 		if (carte instanceof CartePopularite cartePopularite && nbCartesPopularite < TAILLE_MAX) {
 			zonePopularite[nbCartesPopularite] = cartePopularite;
 			nbCartesPopularite++;
@@ -113,31 +118,35 @@ public class Pirate {
 			zoneAttaque[nbCartesZoneAttaque] = carteAttaque;
 			nbCartesZoneAttaque++;
 			perdreVie(carteAttaque.getNbDegats());
-
 			affichage.afficherPerdreVie(nom, carteAttaque.getNbDegats(), pv);
+		}
+		if(carte instanceof CarteRegeneration carteRegeneration) {
+			gagnerVie(carteRegeneration.getPvRecuperees());
+			affichage.afficherEffetCarteRegeneration(nom, carteRegeneration.getPvRecuperees());
 		}
 	}
 
-	public void jouerCarte(Pirate adversaire) {
-		Carte carteAjouer = choisirCarteAJouer();
-		if (carteAjouer instanceof CarteAttaque carteAttaque) {
+	public void jouerCarte(Pirate adversaire, Carte carteJouee) {
+
+		if (carteJouee instanceof CarteAttaque carteAttaque) {
 			attaquerPirate(adversaire, carteAttaque);
 		} else {
-			subirEffetCarte(carteAjouer);
+			subirEffetCarte(carteJouee);
 		}
+		
 
 	}
 
 	public void perdreVie(int vie) {
 		pv -= vie;
 	}
+	
+	public void gagnerVie(int vie) {
+		pv+=vie;
+	}
 
 	public void gagnerPopularite(int pointsPopularite) {
 		popularite += pointsPopularite;
-	}
-
-	public boolean aGagne() {
-		return (!estMort() && estAssezPopulaire());
 	}
 
 	public boolean estMort() {
