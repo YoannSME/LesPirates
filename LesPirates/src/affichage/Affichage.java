@@ -1,5 +1,6 @@
 package affichage;
 
+import java.util.Random;
 import java.util.Scanner;
 
 import cartes.TypeCarte;
@@ -8,9 +9,14 @@ public class Affichage {
 
 	public static final int TAILLE_AFFICHAGE = 13;
 	private Scanner scanner = new Scanner(System.in);
+	private Random random = new Random();
 
-	public void afficherMain(String main) {
-		System.out.println("Main du pirate :\n" + main);
+	public void afficherMain( String[] main) {
+		System.out.println("=".repeat(40));
+		for (int i = 0; i < main.length; i++) {
+			System.out.println(i + 1 + " - " + main[i]);
+		}
+		System.out.println("=".repeat(40));
 
 	}
 
@@ -41,24 +47,24 @@ public class Affichage {
 	}
 
 	public void afficherAttaquePirate(String attaquant, String victime) {
-		System.out.println(attaquant + " attaque " + victime);
+		System.out.println("-- " + attaquant + " attaque " + victime);
 	}
 
 	public void afficherPerdreVie(String nomPirate, int degats, int pv) {
-		System.out.println("Le Pirate " + nomPirate + " a perdu " + degats + "PV, nouveau nombre de PV : " + pv);
+		System.out.println("-- Le Pirate " + nomPirate + " a perdu " + degats + "PV.");
 		if (pv <= 0)
 			System.out.println(nomPirate + " Est mort.");
 	}
 
 	public void afficherEffetCartePopularite(String nomPirate, int nbPopulariteCarte, int nbDegats,
 			int nbPopularitePirate, int pv) {
-		System.out.println("Le Pirate " + nomPirate + " a gagne " + nbPopulariteCarte
+		System.out.println("-- Le Pirate " + nomPirate + " a gagne " + nbPopulariteCarte
 				+ " point(s) de popularité en échange de " + nbDegats + " PV." + " Nouvelle popularité : "
 				+ nbPopularitePirate + ",nouveau nombre de pv " + pv);
 	}
 
 	public void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees) {
-		System.out.println("Le Pirate " + nomPirate + " a recuperee " + pvRecuperees + " pv.");
+		System.out.println("-- Le Pirate " + nomPirate + " a recupere " + pvRecuperees + " pv.");
 	}
 
 	public void afficherGagnerPartie(String nomPirate, int pv, int popularite) {
@@ -75,18 +81,49 @@ public class Affichage {
 				.println("\n" + nomPirate + "\n	PV : " + pvPirate + "\n 	Popularite : " + popularitePirate + ".");
 	}
 
-	public int[] afficherVolerCartes(String nomPirate, String mainPirate, int nbCartesVolees, int nbCartesEnMain) {
+	public int[] recupererCartesVolables(int nbCartesVolees, String[] mainVictime, String nomVictime) {
 		int[] indicesCartes = new int[nbCartesVolees];
-		afficherMain(mainPirate);
-		System.out.println("Vous pouvez voler " + nbCartesVolees + " parmi celles-ci, lesquelles choisissez vous ?");
+		System.out.println("\nVoici les " + nbCartesVolees + " cartes que vous pouvez voler : \n");
 		for (int i = 0; i < nbCartesVolees; i++) {
+			boolean dejaUtilise;
 			do {
-				System.out.println("Carte " + i + 1 + ":");
-				indicesCartes[i] = scanner.nextInt() - 1;
-			} while (indicesCartes[i] > nbCartesEnMain || indicesCartes[i] > 0);
+				indicesCartes[i] = random.nextInt(mainVictime.length);
+				dejaUtilise = false;
+				for (int j = 0; j < i; j++) {
+					if (indicesCartes[i] == indicesCartes[j]) {
+						dejaUtilise = true;
+					}
+				}
+			} while (dejaUtilise);
+			System.out.println("Carte : " + mainVictime[indicesCartes[i]]);
 		}
-		
+
 		return indicesCartes;
+	}
+
+	public int[] recupererCartesEchangees(int nbCartesVolees, String[] mainAttaquant, String nomAttaquant,String[] mainVictime,int[] indicesCartesVolables) {
+
+		int[] cartesVolees = new int[nbCartesVolees];
+
+		System.out.println("\nVoici votre main : ");
+		afficherMain(mainAttaquant);
+		for (int i = 0; i < nbCartesVolees; i++) {
+			System.out.println("Echange de carte numéro " + (i + 1) + ".\n");
+			boolean dejaUtilise;
+			do {
+				System.out.println(
+						"Quelle carte voulez-vous donner en échange de : ("+mainVictime[indicesCartesVolables[i]]+")\n(tapez 0 pour ne pas voler cette carte)");
+				cartesVolees[i] = scanner.nextInt();
+				dejaUtilise = false;
+				for (int j = 0; j < i; j++) {
+					if ((cartesVolees[i] != 0 && cartesVolees[i] == cartesVolees[j])) {
+						dejaUtilise = true;
+					}
+				}
+			} while (dejaUtilise || cartesVolees[i] < 0 || cartesVolees[i] > mainAttaquant.length);
+		}
+
+		return cartesVolees;
 
 	}
 

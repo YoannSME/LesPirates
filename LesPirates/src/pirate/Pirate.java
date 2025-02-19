@@ -15,7 +15,7 @@ public class Pirate {
 	private int popularite = 0;
 	private String nom;
 
-	private Carte[] main = new Carte[TAILLE_MAX];
+	private Carte[] main = new Carte[TAILLE_MAX - 1];
 	private int nbCartesEnMain = 0;
 
 	private CartePopularite[] zonePopularite = new CartePopularite[TAILLE_MAX];
@@ -30,6 +30,16 @@ public class Pirate {
 
 	public Carte[] getMain() {
 		return main;
+	}
+
+	public Carte getCarteAt(int index) {
+		assert (index >= 0 && index < nbCartesEnMain);
+		return main[index];
+	}
+
+	public void setCarteAt(Carte carte, int index) {
+		assert (index >= 0 && index < nbCartesEnMain && nbCartesEnMain < TAILLE_MAX - 1);
+		main[index] = carte;
 	}
 
 	public String toString() {
@@ -52,25 +62,30 @@ public class Pirate {
 		return pv;
 	}
 
-	public String mainToString() {
-		StringBuilder sb = new StringBuilder();
+	public String[] mainToString() {
+		String[] deck = new String[nbCartesEnMain];
 		for (int i = 0; i < nbCartesEnMain; i++) {
-			sb.append(i + 1 + " - ");
-			sb.append(main[i].getType() + "\n");
+			deck[i] = "" + main[i].getType();
 		}
 
-		return sb.toString();
+		return deck;
+	}
+
+	public boolean ajouterCarte(Carte carte) {
+		if (nbCartesEnMain < TAILLE_MAX) {
+			main[nbCartesEnMain] = carte;
+			nbCartesEnMain++;
+			return true;
+		}
+
+		return false;
 	}
 
 	public void piocherCarte(Jeu jeu) {
 		Carte cartePiochee = null;
-		if (nbCartesEnMain < TAILLE_MAX) {
-			cartePiochee = jeu.piocherCarte();
-			if (cartePiochee != null) {
-				main[nbCartesEnMain] = cartePiochee;
-				nbCartesEnMain++;
-			}
-		}
+		cartePiochee = jeu.piocherCarte();
+		ajouterCarte(cartePiochee);
+
 	}
 
 	public Carte choisirCarteAJouer() {
@@ -86,24 +101,34 @@ public class Pirate {
 		affichage.afficherAttaquePirate(nom, pirate.getNom());
 		pirate.subirEffetCarte(carte);
 	}
-	
-	public void volerCarte(Pirate attaquant,Pirate victime,int nbCartesVolees) {
-		int[] indicesCartes = affichage.afficherVolerCartes(victime.getNom(),victime.mainToString(),nbCartesVolees,victime.getNbCartes());
-		//Demander au pirate attaquant par quelles cartes il veut échanger celles qu'il a 
+
+	public void volerCarte(Pirate victime, int nbCartesVolees) {
+		int[] cartesPrises = affichage.recupererCartesVolables(nbCartesVolees, victime.mainToString(),
+				victime.getNom());
+		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolees, mainToString(), nom,victime.mainToString(),cartesPrises);
+
+		for (int i = 0; i < nbCartesVolees; i++) {
+			if (cartesEchange[i] != 0) {
+				Carte carteVolee = victime.getCarteAt(cartesPrises[i]);
+				Carte carteEchange = getCarteAt(cartesEchange[i] - 1);
+				victime.setCarteAt(carteEchange, cartesPrises[i]);
+				setCarteAt(carteVolee, cartesEchange[i] - 1);
+			}
+		}
+
 	}
 
 	public Carte enleverCarte(int index) {
+		assert (nbCartesEnMain > 0);
 		Carte carte = main[index];
 		for (int i = index; i < nbCartesEnMain - 1; i++) {
 			main[i] = main[i + 1];
 		}
-		main[nbCartesEnMain] = null;
-		if (nbCartesEnMain > 0)
-			nbCartesEnMain--;
+		main[nbCartesEnMain - 1] = null;
+		nbCartesEnMain--;
 		return carte;
 	}
 
-	
 	private void subirEffetCarte(Carte carte) {
 		if (carte instanceof CartePopularite cartePopularite && nbCartesPopularite < TAILLE_MAX) {
 			zonePopularite[nbCartesPopularite] = cartePopularite;
@@ -120,7 +145,7 @@ public class Pirate {
 			perdreVie(carteAttaque.getNbDegats());
 			affichage.afficherPerdreVie(nom, carteAttaque.getNbDegats(), pv);
 		}
-		if(carte instanceof CarteRegeneration carteRegeneration) {
+		if (carte instanceof CarteRegeneration carteRegeneration) {
 			gagnerVie(carteRegeneration.getPvRecuperees());
 			affichage.afficherEffetCarteRegeneration(nom, carteRegeneration.getPvRecuperees());
 		}
@@ -130,19 +155,20 @@ public class Pirate {
 
 		if (carteJouee instanceof CarteAttaque carteAttaque) {
 			attaquerPirate(adversaire, carteAttaque);
+		} else if (carteJouee instanceof CarteVole carteVole) {
+			volerCarte(adversaire, carteVole.getNbCartesVolables());
 		} else {
 			subirEffetCarte(carteJouee);
 		}
-		
 
 	}
 
 	public void perdreVie(int vie) {
 		pv -= vie;
 	}
-	
+
 	public void gagnerVie(int vie) {
-		pv+=vie;
+		pv += vie;
 	}
 
 	public void gagnerPopularite(int pointsPopularite) {

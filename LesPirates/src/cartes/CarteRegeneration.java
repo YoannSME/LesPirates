@@ -2,7 +2,7 @@ package cartes;
 
 public class CarteRegeneration extends Carte {
 	private int pvRecuperees;
-	public CarteRegeneration(TypeCarte typeCarte, String description,int pvRecuperees) {
+	public CarteRegeneration(TypeCarte typeCarte,int pvRecuperees,String description) {
 		super(typeCarte,description);
 		this.pvRecuperees = pvRecuperees;
 	}
