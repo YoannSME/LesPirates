@@ -6,11 +6,12 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import affichage.Affichage;
+import affichage.IAffichage;
 import cartes.*;
 
 public class Jeu {
 	private Random random;
-	private Affichage affichage = new Affichage();
+	private IAffichage affichage = new Affichage();
 	private Pirate pirateJack = new Pirate("Jack le Borgne");
 	private Pirate pirateBill = new Pirate("Bill Jambe-de-Bois");
 
@@ -26,25 +27,40 @@ public class Jeu {
 
 	}
 
-	public void remplirPioche(Carte carte) {
-		if (nbCartes < pioche.length) {
-			pioche[nbCartes] = carte;
-			nbCartes++;
+	public Carte[] getPioche() {
+		return pioche;
+	}
+
+	public int getNbCartes() {
+		return nbCartes;
+	}
+
+	public void remplirPioche(Carte carte, int occurence) {
+		for (int i = 0; i < occurence; i++) {
+			if (nbCartes < pioche.length) {
+				pioche[nbCartes] = carte;
+				nbCartes++;
+			}
 		}
 	}
 
 	public Carte piocherCarte() {
 		Carte cartePiochee = null;
 		if (nbCartes > 0) {
-			int indice = random.nextInt(nbCartes);
-			cartePiochee = pioche[indice];
+			int index = random.nextInt(nbCartes);
+			cartePiochee = pioche[index];
+			for (int i = index; i < nbCartes - 1; i++) {
+				pioche[i] = pioche[i + 1];
+			}
+			pioche[nbCartes - 1] = null;
+			nbCartes--;
 		}
 		return cartePiochee;
 	}
 
+
 	private void tourDeJeu(Pirate pirateJoueur, Pirate pirateAdverse) {
 		affichage.afficherDebutTour(pirateJoueur.getNom());
-
 		Carte carteAjouer = pirateJoueur.choisirCarteAJouer();
 		pirateJoueur.jouerCarte(pirateAdverse, carteAjouer);
 		affichage.afficherFinTour(pirateJoueur.getNom(), pirateJoueur.getPV(), pirateJoueur.getPopularite());
@@ -59,33 +75,65 @@ public class Jeu {
 		return pirate2;
 	}
 
-	private boolean aGagne(Pirate pirateCourant, Pirate pirateAdverse) {
-		return pirateCourant.estAssezPopulaire() || pirateAdverse.estMort();
+	private Pirate pirateGagnant(Pirate pirateCourant, Pirate pirateAdverse) {
+		Pirate gagnant = null;
+		if (pirateCourant.estAssezPopulaire() || pirateAdverse.estMort())
+			gagnant = pirateCourant;
+		if (pirateAdverse.estAssezPopulaire() || pirateCourant.estMort())
+			gagnant = pirateAdverse;
+		return gagnant;
 	}
 
-	public void lancerJeu() {
-		Pirate gagnant = null;
-		boolean partieFinie = false;
+	private void preparerJeu() {
+		CartePopularite abordageReussi = new CartePopularite(TypeCarte.AbordageReussi, 0, 2,
+				"Au cours d'un abordage, le\r\n" + "pirate fait preuve d'une\r\n" + "grande bravoure et gagne deux\r\n"
+						+ "points de popularité");
+		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DiscoursInspirant, 0, 1,
+				"Le discours inspirant du pirate a motivé son équipage et lui a fait gagner 1 point de popularité");
+		CartePopularite mainDeFer = new CartePopularite(TypeCarte.MainDeFer, 1, 2,
+				"En échange de 2 points de popularité, le pirate perd 1PV.");
+
+		CarteAttaque coupDeSabre = new CarteAttaque(TypeCarte.CoupDeSabre, 2,
+				"Le pirate attaque son adversaire pour lui infliger 2 points de dégats");
+		CarteVole carteVole = new CarteVole(TypeCarte.VoleDeCarte, 2,
+				"Le pirate rempli de malice vient voler 2 cartes à son adversaire");
+		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
+
+		remplirPioche(mainDeFer, 9);
+		remplirPioche(discoursInspirant, 9);
+		remplirPioche(coupDeSabre, 9);
+		remplirPioche(carteRegen, 9);
+		remplirPioche(abordageReussi, 9);
+		remplirPioche(carteVole, 5);
+
 		for (int i = 0; i < 4; i++) {
 			pirateBill.piocherCarte(this);
 			pirateJack.piocherCarte(this);
 		}
+
+	}
+
+	public void lancerJeu() {
+
+		preparerJeu();
+		Pirate gagnant = null;
+		boolean partieFinie = false;
+
 		Pirate premierPirate = choisirPremierJoueur(pirateJack, pirateBill);
 		Pirate deuxiemePirate = (premierPirate == pirateJack) ? pirateBill : pirateJack;
 
 		while (!partieFinie) {
 			tourDeJeu(premierPirate, deuxiemePirate);
-			if (aGagne(premierPirate, deuxiemePirate)) {
+			gagnant = pirateGagnant(premierPirate, deuxiemePirate);
+			if (gagnant != null)
 				partieFinie = true;
-				gagnant = premierPirate;
-			} else {
+			else {
 				tourDeJeu(deuxiemePirate, premierPirate);
-				if (aGagne(deuxiemePirate, premierPirate)) {
+				gagnant = pirateGagnant(deuxiemePirate, premierPirate);
+				if (gagnant != null)
 					partieFinie = true;
-					gagnant = deuxiemePirate;
-				}
-
 			}
+
 		}
 		affichage.afficherGagnerPartie(gagnant.getNom(), gagnant.getPV(), gagnant.getPopularite());
 
@@ -93,27 +141,7 @@ public class Jeu {
 
 	public static void main(String[] args) {
 		Jeu jeu = new Jeu();
-		CartePopularite abordageReussi = new CartePopularite(TypeCarte.AbordageReussi, 0, 2,
-				"Au cours d'un abordage, le\r\n" + "pirate fait preuve d'une\r\n" + "grande bravoure et gagne deux\r\n"
-						+ "points de popularité");
-		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DiscoursInspirant, 0, 1,
-				"Le discours inspirant du pirate a motivé son équipage et lui a fait gagner 1pt de popularité");
-		CartePopularite mainDeFer = new CartePopularite(TypeCarte.MainDeFer, 1, 2,
-				"En échange de 2 points de popularité, le pirate perd 1PV.");
-
-		CarteAttaque coupDeSabre = new CarteAttaque(TypeCarte.CoupDeSabre, 2,
-				"Le pirate attaque son adversaire pour lui infliger 2pts de dégats");
-		CarteVole carteVole = new CarteVole(TypeCarte.CarteVole, 2, "vole 2 cartes");
-		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.CarteRegen, 2, "regen 2PV");
-
-		for (int i = 0; i < 10; i++) {
-			jeu.remplirPioche(mainDeFer);
-			jeu.remplirPioche(discoursInspirant);
-			jeu.remplirPioche(coupDeSabre);
-			jeu.remplirPioche(carteVole);
-			jeu.remplirPioche(carteRegen);
-		}
-
+		
 		jeu.lancerJeu();
 
 	}

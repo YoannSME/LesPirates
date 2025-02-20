@@ -1,14 +1,13 @@
 package pirate;
 
-import java.security.SecureRandom;
-import java.util.Random;
 
 import affichage.Affichage;
+import affichage.IAffichage;
 import cartes.*;
 import jeu.Jeu;
 
 public class Pirate {
-	Affichage affichage = new Affichage();
+	IAffichage affichage = new Affichage();
 
 	public static final int TAILLE_MAX = 5;
 	private int pv = 5;
@@ -105,7 +104,8 @@ public class Pirate {
 	public void volerCarte(Pirate victime, int nbCartesVolees) {
 		int[] cartesPrises = affichage.recupererCartesVolables(nbCartesVolees, victime.mainToString(),
 				victime.getNom());
-		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolees, mainToString(), nom,victime.mainToString(),cartesPrises);
+		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolees, mainToString(), nom,
+				victime.mainToString(), cartesPrises);
 
 		for (int i = 0; i < nbCartesVolees; i++) {
 			if (cartesEchange[i] != 0) {

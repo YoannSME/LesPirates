@@ -2,11 +2,12 @@ package testFonctionnels;
 
 import jeu.Jeu;
 import affichage.Affichage;
+import affichage.IAffichage;
 import cartes.*;
 
 public class Test {
-	public Affichage affichage = new Affichage();
-
+	IAffichage affichage = new Affichage();
+	Jeu jeu = new Jeu();
 	public void testEchangerCartes() {
 		String[] mainA = new String[] { "MainDeFer", "CoupDeSabre", "abra", "DiscoursInspirant" };
 		String[] mainB = new String[] { "AAAA", "BBBB", "CCC", "DDDD" };
@@ -32,14 +33,33 @@ public class Test {
 
 		affichage.afficherMain(mainA);
 		affichage.afficherMain(mainB);
-
+	}
+	
+	public void testRemplirPioche() {
+		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
+		jeu.remplirPioche(carteRegen, 70);
+		assert(jeu.getNbCartes()==50);
+	}
+	
+	public void testViderPioche() {
+		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
+		jeu.remplirPioche(carteRegen, 20);
+		
+		for(int i = 0;i<20;i++) {
+			assert(jeu.piocherCarte()!=null);
+		}
+		
+		assert(jeu.piocherCarte()==null);
+		
 	}
 
 	public static void main(String[] args) {
 
 		Test test = new Test();
-		test.testEchangerCartes();
 		
+		test.testEchangerCartes();
+		test.testRemplirPioche();
+		test.testViderPioche();
 		
 
 	}

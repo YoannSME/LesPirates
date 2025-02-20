@@ -5,12 +5,13 @@ import java.util.Scanner;
 
 import cartes.TypeCarte;
 
-public class Affichage {
+public class Affichage implements IAffichage {
 
 	public static final int TAILLE_AFFICHAGE = 13;
 	private Scanner scanner = new Scanner(System.in);
 	private Random random = new Random();
 
+	@Override
 	public void afficherMain( String[] main) {
 		System.out.println("=".repeat(40));
 		for (int i = 0; i < main.length; i++) {
@@ -20,6 +21,7 @@ public class Affichage {
 
 	}
 
+	@Override
 	public int afficherChoisirCarte(int nbCartes) {
 		int choix;
 		do {
@@ -29,6 +31,7 @@ public class Affichage {
 		return choix;
 	}
 
+	@Override
 	public void detailCarte(TypeCarte typeCarte, String texte) {
 		int tailleTexte = texte.length();
 
@@ -38,6 +41,7 @@ public class Affichage {
 		System.out.println("*".repeat(tailleTexte + 4) + "\n");
 	}
 
+	@Override
 	public void afficherPiocherCarte(int taille_max, String nomPirate, int nbCartes, TypeCarte typeCarte) {
 		if (nbCartes < taille_max) {
 			System.out.println("Carte piochée : " + typeCarte);
@@ -46,16 +50,19 @@ public class Affichage {
 			System.out.println("La main de " + nomPirate + " est pleine, carte " + typeCarte + " remise en jeu.");
 	}
 
+	@Override
 	public void afficherAttaquePirate(String attaquant, String victime) {
 		System.out.println("-- " + attaquant + " attaque " + victime);
 	}
 
+	@Override
 	public void afficherPerdreVie(String nomPirate, int degats, int pv) {
 		System.out.println("-- Le Pirate " + nomPirate + " a perdu " + degats + "PV.");
 		if (pv <= 0)
 			System.out.println(nomPirate + " Est mort.");
 	}
 
+	@Override
 	public void afficherEffetCartePopularite(String nomPirate, int nbPopulariteCarte, int nbDegats,
 			int nbPopularitePirate, int pv) {
 		System.out.println("-- Le Pirate " + nomPirate + " a gagne " + nbPopulariteCarte
@@ -63,24 +70,29 @@ public class Affichage {
 				+ nbPopularitePirate + ",nouveau nombre de pv " + pv);
 	}
 
+	@Override
 	public void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees) {
 		System.out.println("-- Le Pirate " + nomPirate + " a recupere " + pvRecuperees + " pv.");
 	}
 
+	@Override
 	public void afficherGagnerPartie(String nomPirate, int pv, int popularite) {
 		System.out.println("Partie finie, le pirate " + nomPirate + " a gagné cet affrontement.");
 	}
 
+	@Override
 	public void afficherDebutTour(String nomPirate) {
 		System.out.println("_".repeat(150));
 		System.out.println("Debut du tour de jeu du Pirate : " + nomPirate);
 	}
 
+	@Override
 	public void afficherFinTour(String nomPirate, int pvPirate, int popularitePirate) {
 		System.out
 				.println("\n" + nomPirate + "\n	PV : " + pvPirate + "\n 	Popularite : " + popularitePirate + ".");
 	}
 
+	@Override
 	public int[] recupererCartesVolables(int nbCartesVolees, String[] mainVictime, String nomVictime) {
 		int[] indicesCartes = new int[nbCartesVolees];
 		System.out.println("\nVoici les " + nbCartesVolees + " cartes que vous pouvez voler : \n");
@@ -101,6 +113,7 @@ public class Affichage {
 		return indicesCartes;
 	}
 
+	@Override
 	public int[] recupererCartesEchangees(int nbCartesVolees, String[] mainAttaquant, String nomAttaquant,String[] mainVictime,int[] indicesCartesVolables) {
 
 		int[] cartesVolees = new int[nbCartesVolees];
