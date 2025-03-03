@@ -6,7 +6,6 @@ public class CarteAttaque extends Carte {
 	public CarteAttaque(TypeCarte typeCarte, int nbDegats, String description) {
 		super(typeCarte, description);
 		this.nbDegats = nbDegats;
-
 	}
 
 	public int getNbDegats() {

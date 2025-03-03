@@ -1,6 +1,5 @@
 package pirate;
 
-
 import affichage.Affichage;
 import affichage.IAffichage;
 import cartes.*;
@@ -31,7 +30,7 @@ public class Pirate {
 		return main;
 	}
 
-	public Carte getCarteAt(int index) {
+	public Carte getCarte(int index) {
 		assert (index >= 0 && index < nbCartesEnMain);
 		return main[index];
 	}
@@ -81,40 +80,8 @@ public class Pirate {
 	}
 
 	public void piocherCarte(Jeu jeu) {
-		Carte cartePiochee = null;
-		cartePiochee = jeu.piocherCarte();
+		Carte cartePiochee = jeu.piocherCarte();
 		ajouterCarte(cartePiochee);
-
-	}
-
-	public Carte choisirCarteAJouer() {
-		affichage.afficherMain(mainToString());
-		int choix = affichage.afficherChoisirCarte(nbCartesEnMain);
-		Carte carteChoisie = main[choix - 1];
-		affichage.detailCarte(carteChoisie.getType(), carteChoisie.getDescription());
-		enleverCarte(choix - 1);
-		return carteChoisie;
-	}
-
-	public void attaquerPirate(Pirate pirate, CarteAttaque carte) {
-		affichage.afficherAttaquePirate(nom, pirate.getNom());
-		pirate.subirEffetCarte(carte);
-	}
-
-	public void volerCarte(Pirate victime, int nbCartesVolees) {
-		int[] cartesPrises = affichage.recupererCartesVolables(nbCartesVolees, victime.mainToString(),
-				victime.getNom());
-		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolees, mainToString(), nom,
-				victime.mainToString(), cartesPrises);
-
-		for (int i = 0; i < nbCartesVolees; i++) {
-			if (cartesEchange[i] != 0) {
-				Carte carteVolee = victime.getCarteAt(cartesPrises[i]);
-				Carte carteEchange = getCarteAt(cartesEchange[i] - 1);
-				victime.setCarteAt(carteEchange, cartesPrises[i]);
-				setCarteAt(carteVolee, cartesEchange[i] - 1);
-			}
-		}
 
 	}
 
@@ -129,26 +96,9 @@ public class Pirate {
 		return carte;
 	}
 
-	private void subirEffetCarte(Carte carte) {
-		if (carte instanceof CartePopularite cartePopularite && nbCartesPopularite < TAILLE_MAX) {
-			zonePopularite[nbCartesPopularite] = cartePopularite;
-			nbCartesPopularite++;
-			gagnerPopularite(cartePopularite.getNbPopularite());
-			perdreVie(cartePopularite.getNbDegats());
-
-			affichage.afficherEffetCartePopularite(nom, cartePopularite.getNbPopularite(),
-					cartePopularite.getNbDegats(), popularite, pv);
-		}
-		if (carte instanceof CarteAttaque carteAttaque && nbCartesZoneAttaque < TAILLE_MAX) {
-			zoneAttaque[nbCartesZoneAttaque] = carteAttaque;
-			nbCartesZoneAttaque++;
-			perdreVie(carteAttaque.getNbDegats());
-			affichage.afficherPerdreVie(nom, carteAttaque.getNbDegats(), pv);
-		}
-		if (carte instanceof CarteRegeneration carteRegeneration) {
-			gagnerVie(carteRegeneration.getPvRecuperees());
-			affichage.afficherEffetCarteRegeneration(nom, carteRegeneration.getPvRecuperees());
-		}
+	public Carte choisirCarteAJouer() {
+		int choix = affichage.afficherChoisirCarte(nbCartesEnMain);
+		return enleverCarte(choix - 1);
 	}
 
 	public void jouerCarte(Pirate adversaire, Carte carteJouee) {
@@ -163,8 +113,52 @@ public class Pirate {
 
 	}
 
+	private void attaquerPirate(Pirate cible, CarteAttaque carte) {
+		affichage.afficherAttaquePirate(nom, cible.getNom());
+		cible.subirEffetCarte(carte);
+	}
+
+	private void volerCarte(Pirate cible, int nbCartesVolees) {
+		int[] cartesPrises = affichage.recupererCartesVolables(nbCartesVolees, cible.mainToString(), cible.getNom());
+		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolees, mainToString(), nom,
+				cible.mainToString(), cartesPrises);
+
+		for (int i = 0; i < nbCartesVolees; i++) {
+			if (cartesEchange[i] != 0) {
+				Carte carteVolee = cible.getCarte(cartesPrises[i]);
+				Carte carteEchange = this.getCarte(cartesEchange[i] - 1);
+				cible.setCarteAt(carteEchange, cartesPrises[i]);
+				this.setCarteAt(carteVolee, cartesEchange[i] - 1);
+			}
+		}
+
+	}
+
+	private void subirEffetCarte(Carte carte) {
+		if (carte instanceof CartePopularite cartePopularite) {
+			zonePopularite[nbCartesPopularite] = cartePopularite;
+			nbCartesPopularite = (nbCartesPopularite + 1) % TAILLE_MAX;
+			gagnerPopularite(cartePopularite.getNbPopularite());
+			perdreVie(cartePopularite.getNbDegats());
+			affichage.afficherEffetCartePopularite(nom, cartePopularite.getNbPopularite(),
+					cartePopularite.getNbDegats(), popularite, pv);
+		}
+		if (carte instanceof CarteAttaque carteAttaque) {
+			zoneAttaque[nbCartesZoneAttaque] = carteAttaque;
+			nbCartesZoneAttaque = (nbCartesZoneAttaque + 1) % TAILLE_MAX;
+			perdreVie(carteAttaque.getNbDegats());
+			affichage.afficherPerdreVie(nom, carteAttaque.getNbDegats(), pv);
+		}
+		if (carte instanceof CarteRegeneration carteRegeneration) {
+			gagnerVie(carteRegeneration.getPvRecuperees());
+			affichage.afficherEffetCarteRegeneration(nom, carteRegeneration.getPvRecuperees());
+		}
+	}
+
 	public void perdreVie(int vie) {
 		pv -= vie;
+		if(pv<0)
+			pv = 0;
 	}
 
 	public void gagnerVie(int vie) {
@@ -173,6 +167,12 @@ public class Pirate {
 
 	public void gagnerPopularite(int pointsPopularite) {
 		popularite += pointsPopularite;
+	}
+	
+	public void perdrePopularite(int pointsPopularite) {
+		popularite -= pointsPopularite;
+		if(popularite<0)
+			popularite = 0;
 	}
 
 	public boolean estMort() {

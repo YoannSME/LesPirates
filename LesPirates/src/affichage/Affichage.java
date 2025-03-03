@@ -7,12 +7,11 @@ import cartes.TypeCarte;
 
 public class Affichage implements IAffichage {
 
-	public static final int TAILLE_AFFICHAGE = 13;
 	private Scanner scanner = new Scanner(System.in);
 	private Random random = new Random();
 
 	@Override
-	public void afficherMain( String[] main) {
+	public void afficherMain(String[] main) {
 		System.out.println("=".repeat(40));
 		for (int i = 0; i < main.length; i++) {
 			System.out.println(i + 1 + " - " + main[i]);
@@ -32,7 +31,7 @@ public class Affichage implements IAffichage {
 	}
 
 	@Override
-	public void detailCarte(TypeCarte typeCarte, String texte) {
+	public void afficherDetailCarte(TypeCarte typeCarte, String texte) {
 		int tailleTexte = texte.length();
 
 		System.out.print("\n\t\t\tCarte : " + typeCarte + "\n\t\t");
@@ -42,8 +41,8 @@ public class Affichage implements IAffichage {
 	}
 
 	@Override
-	public void afficherPiocherCarte(int taille_max, String nomPirate, int nbCartes, TypeCarte typeCarte) {
-		if (nbCartes < taille_max) {
+	public void afficherPiocherCarte(int tailleMax, String nomPirate, int nbCartes, TypeCarte typeCarte) {
+		if (nbCartes < tailleMax) {
 			System.out.println("Carte piochée : " + typeCarte);
 
 		} else
@@ -114,7 +113,8 @@ public class Affichage implements IAffichage {
 	}
 
 	@Override
-	public int[] recupererCartesEchangees(int nbCartesVolees, String[] mainAttaquant, String nomAttaquant,String[] mainVictime,int[] indicesCartesVolables) {
+	public int[] recupererCartesEchangees(int nbCartesVolees, String[] mainAttaquant, String nomAttaquant,
+			String[] mainVictime, int[] indicesCartesVolables) {
 
 		int[] cartesVolees = new int[nbCartesVolees];
 
@@ -124,8 +124,8 @@ public class Affichage implements IAffichage {
 			System.out.println("Echange de carte numéro " + (i + 1) + ".\n");
 			boolean dejaUtilise;
 			do {
-				System.out.println(
-						"Quelle carte voulez-vous donner en échange de : ("+mainVictime[indicesCartesVolables[i]]+")\n(tapez 0 pour ne pas voler cette carte)");
+				System.out.println("Quelle carte voulez-vous donner en échange de : ("
+						+ mainVictime[indicesCartesVolables[i]] + ")\n(tapez 0 pour ne pas voler cette carte)");
 				cartesVolees[i] = scanner.nextInt();
 				dejaUtilise = false;
 				for (int j = 0; j < i; j++) {

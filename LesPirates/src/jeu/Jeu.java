@@ -61,7 +61,9 @@ public class Jeu {
 
 	private void tourDeJeu(Pirate pirateJoueur, Pirate pirateAdverse) {
 		affichage.afficherDebutTour(pirateJoueur.getNom());
+		affichage.afficherMain(pirateJoueur.mainToString());
 		Carte carteAjouer = pirateJoueur.choisirCarteAJouer();
+		affichage.afficherDetailCarte(carteAjouer.getType(), carteAjouer.getDescription());
 		pirateJoueur.jouerCarte(pirateAdverse, carteAjouer);
 		affichage.afficherFinTour(pirateJoueur.getNom(), pirateJoueur.getPV(), pirateJoueur.getPopularite());
 		affichage.afficherFinTour(pirateAdverse.getNom(), pirateAdverse.getPV(), pirateAdverse.getPopularite());
@@ -86,8 +88,7 @@ public class Jeu {
 
 	private void preparerJeu() {
 		CartePopularite abordageReussi = new CartePopularite(TypeCarte.AbordageReussi, 0, 2,
-				"Au cours d'un abordage, le\r\n" + "pirate fait preuve d'une\r\n" + "grande bravoure et gagne deux\r\n"
-						+ "points de popularité");
+				"Au cours d'un abordage, le pirate fait preuve d'une grande bravoure et gagne deux points de popularité");
 		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DiscoursInspirant, 0, 1,
 				"Le discours inspirant du pirate a motivé son équipage et lui a fait gagner 1 point de popularité");
 		CartePopularite mainDeFer = new CartePopularite(TypeCarte.MainDeFer, 1, 2,

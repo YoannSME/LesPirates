@@ -8,9 +8,9 @@ public interface IAffichage {
 
 	int afficherChoisirCarte(int nbCartes);
 
-	void detailCarte(TypeCarte typeCarte, String texte);
+	void afficherDetailCarte(TypeCarte typeCarte, String texte);
 
-	void afficherPiocherCarte(int taille_max, String nomPirate, int nbCartes, TypeCarte typeCarte);
+	void afficherPiocherCarte(int tailleMax, String nomPirate, int nbCartes, TypeCarte typeCarte);
 
 	void afficherAttaquePirate(String attaquant, String victime);
 
