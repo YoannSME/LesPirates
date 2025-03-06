@@ -136,7 +136,7 @@ public class Jeu {
 			}
 
 		}
-		affichage.afficherGagnerPartie(gagnant.getNom(), gagnant.getPV(), gagnant.getPopularite());
+		affichage.afficherGagnerPartie(gagnant.getNom());
 
 	}
 
