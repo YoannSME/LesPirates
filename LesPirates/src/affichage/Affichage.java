@@ -75,7 +75,7 @@ public class Affichage implements IAffichage {
 	}
 
 	@Override
-	public void afficherGagnerPartie(String nomPirate, int pv, int popularite) {
+	public void afficherGagnerPartie(String nomPirate) {
 		System.out.println("Partie finie, le pirate " + nomPirate + " a gagné cet affrontement.");
 	}
 
@@ -87,8 +87,7 @@ public class Affichage implements IAffichage {
 
 	@Override
 	public void afficherFinTour(String nomPirate, int pvPirate, int popularitePirate) {
-		System.out
-				.println("\n" + nomPirate + "\n	PV : " + pvPirate + "\n 	Popularite : " + popularitePirate + ".");
+		System.out.println("\n" + nomPirate + "\n	PV : " + pvPirate + "\n 	Popularite : " + popularitePirate + ".");
 	}
 
 	@Override
