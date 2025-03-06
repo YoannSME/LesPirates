@@ -21,7 +21,7 @@ public interface IAffichage {
 
 	void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees);
 
-	void afficherGagnerPartie(String nomPirate, int pv, int popularite);
+	void afficherGagnerPartie(String nomPirate);
 
 	void afficherDebutTour(String nomPirate);
 
