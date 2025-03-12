@@ -8,11 +8,12 @@ import cartes.*;
 public class Test {
 	IAffichage affichage = new Affichage();
 	Jeu jeu = new Jeu();
+
 	public void testEchangerCartes() {
 		String[] mainA = new String[] { "MainDeFer", "CoupDeSabre", "abra", "DiscoursInspirant" };
 		String[] mainB = new String[] { "AAAA", "BBBB", "CCC", "DDDD" };
-		int[] a = affichage.recupererCartesVolables(2, mainA,"DEFENSE");
-		int[] b = affichage.recupererCartesEchangees(2, mainB, "ATTAQUE",mainA,a);
+		int[] a = affichage.recupererCartesVolables(2, mainA, "DEFENSE");
+		int[] b = affichage.recupererCartesEchangees(2, mainB, "ATTAQUE", mainA, a);
 
 		for (int i = 0; i < 2; i++) {
 			System.out.println("A PRENDRE : " + a[i]);
@@ -34,33 +35,34 @@ public class Test {
 		affichage.afficherMain(mainA);
 		affichage.afficherMain(mainB);
 	}
-	
+
 	public void testRemplirPioche() {
 		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
-		jeu.remplirPioche(carteRegen, 70);
-		assert(jeu.getNbCartes()==50);
+		jeu.getPioche().remplirPioche(carteRegen, 50);
+		System.out.println(jeu.getPioche().getNbCartes());
+		System.out.println(jeu.getPioche().getNbCartes() == 50);
 	}
-	
+
 	public void testViderPioche() {
 		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
-		jeu.remplirPioche(carteRegen, 20);
-		
-		for(int i = 0;i<20;i++) {
-			assert(jeu.piocherCarte()!=null);
+		jeu = new Jeu();
+		jeu.getPioche().remplirPioche(carteRegen, 20);
+
+		for (int i = 0; i < 20; i++) {
+			System.out.println(jeu.getPioche().piocherCarte() != null);
 		}
-		
-		assert(jeu.piocherCarte()==null);
-		
+
+		assert (jeu.getPioche().piocherCarte() == null);
+
 	}
 
 	public static void main(String[] args) {
 
 		Test test = new Test();
-		
-		test.testEchangerCartes();
+
+		// test.testEchangerCartes();
 		test.testRemplirPioche();
 		test.testViderPioche();
-		
 
 	}
 

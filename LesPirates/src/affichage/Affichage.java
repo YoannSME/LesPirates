@@ -87,7 +87,8 @@ public class Affichage implements IAffichage {
 
 	@Override
 	public void afficherFinTour(String nomPirate, int pvPirate, int popularitePirate) {
-		System.out.println("\n" + nomPirate + "\n	PV : " + pvPirate + "\n 	Popularite : " + popularitePirate + ".");
+		System.out
+				.println("\n" + nomPirate + "\n	PV : " + pvPirate + "\n 	Popularite : " + popularitePirate + ".");
 	}
 
 	@Override
@@ -136,7 +137,6 @@ public class Affichage implements IAffichage {
 		}
 
 		return cartesVolees;
-
 	}
 
 }

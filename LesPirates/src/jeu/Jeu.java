@@ -8,6 +8,7 @@ import java.util.Random;
 import affichage.Affichage;
 import affichage.IAffichage;
 import cartes.*;
+import pioche.Pioche;
 
 public class Jeu {
 	private Random random;
@@ -15,8 +16,7 @@ public class Jeu {
 	private Pirate pirateJack = new Pirate("Jack le Borgne");
 	private Pirate pirateBill = new Pirate("Bill Jambe-de-Bois");
 
-	private Carte[] pioche = new Carte[50];
-	private int nbCartes = 0;
+	private Pioche pioche = new Pioche(50);
 
 	public Jeu() {
 		try {
@@ -27,57 +27,29 @@ public class Jeu {
 
 	}
 
-	public Carte[] getPioche() {
+	public Pioche getPioche() {
 		return pioche;
 	}
 
-	public int getNbCartes() {
-		return nbCartes;
-	}
-
-	public void remplirPioche(Carte carte, int occurence) {
-		for (int i = 0; i < occurence; i++) {
-			if (nbCartes < pioche.length) {
-				pioche[nbCartes] = carte;
-				nbCartes++;
-			}
-		}
-	}
-
-	public Carte piocherCarte() {
-		Carte cartePiochee = null;
-		if (nbCartes > 0) {
-			int index = random.nextInt(nbCartes);
-			cartePiochee = pioche[index];
-			for (int i = index; i < nbCartes - 1; i++) {
-				pioche[i] = pioche[i + 1];
-			}
-			pioche[nbCartes - 1] = null;
-			nbCartes--;
-		}
-		return cartePiochee;
-	}
-
-
-	private void tourDeJeu(Pirate pirateJoueur, Pirate pirateAdverse) {
+	public void tourDeJeu(Pirate pirateJoueur, Pirate pirateAdverse) {
+		pirateJoueur.piocherCarte(this);
 		affichage.afficherDebutTour(pirateJoueur.getNom());
-		affichage.afficherMain(pirateJoueur.mainToString());
+		affichage.afficherMain(pirateJoueur.getMain().piocheToString());
 		Carte carteAjouer = pirateJoueur.choisirCarteAJouer();
 		affichage.afficherDetailCarte(carteAjouer.getType(), carteAjouer.getDescription());
 		pirateJoueur.jouerCarte(pirateAdverse, carteAjouer);
 		affichage.afficherFinTour(pirateJoueur.getNom(), pirateJoueur.getPV(), pirateJoueur.getPopularite());
 		affichage.afficherFinTour(pirateAdverse.getNom(), pirateAdverse.getPV(), pirateAdverse.getPopularite());
-		pirateJoueur.piocherCarte(this);
 	}
 
-	private Pirate choisirPremierJoueur(Pirate pirate1, Pirate pirate2) {
+	public Pirate choisirPremierJoueur(Pirate pirate1, Pirate pirate2) {
 		if (random.nextInt(0, 2) % 2 == 0) {
 			return pirate1;
 		}
 		return pirate2;
 	}
 
-	private Pirate pirateGagnant(Pirate pirateCourant, Pirate pirateAdverse) {
+	public Pirate pirateGagnant(Pirate pirateCourant, Pirate pirateAdverse) {
 		Pirate gagnant = null;
 		if (pirateCourant.estAssezPopulaire() || pirateAdverse.estMort())
 			gagnant = pirateCourant;
@@ -86,7 +58,7 @@ public class Jeu {
 		return gagnant;
 	}
 
-	private void preparerJeu() {
+	public void preparerJeu() {
 		CartePopularite abordageReussi = new CartePopularite(TypeCarte.AbordageReussi, 0, 2,
 				"Au cours d'un abordage, le pirate fait preuve d'une grande bravoure et gagne deux points de popularité");
 		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DiscoursInspirant, 0, 1,
@@ -100,14 +72,14 @@ public class Jeu {
 				"Le pirate rempli de malice vient voler 2 cartes à son adversaire");
 		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
 
-		remplirPioche(mainDeFer, 9);
-		remplirPioche(discoursInspirant, 9);
-		remplirPioche(coupDeSabre, 9);
-		remplirPioche(carteRegen, 9);
-		remplirPioche(abordageReussi, 9);
-		remplirPioche(carteVole, 5);
+		pioche.remplirPioche(mainDeFer, 9);
+		pioche.remplirPioche(discoursInspirant, 9);
+		pioche.remplirPioche(coupDeSabre, 9);
+		pioche.remplirPioche(carteRegen, 9);
+		pioche.remplirPioche(abordageReussi, 9);
+		pioche.remplirPioche(carteVole, 5);
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			pirateBill.piocherCarte(this);
 			pirateJack.piocherCarte(this);
 		}
@@ -142,7 +114,7 @@ public class Jeu {
 
 	public static void main(String[] args) {
 		Jeu jeu = new Jeu();
-		
+
 		jeu.lancerJeu();
 
 	}
