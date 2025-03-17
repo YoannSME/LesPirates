@@ -1,5 +1,8 @@
 package pirate;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 import affichage.Affichage;
 import affichage.IAffichage;
 import cartes.*;
@@ -7,8 +10,8 @@ import jeu.Jeu;
 import pioche.Pioche;
 
 public class Pirate {
-	IAffichage affichage = new Affichage();
-
+	private IAffichage affichage = new Affichage();
+	private Random random;
 	public static final int TAILLE_MAX = 5;
 	private int pv = 5;
 	private int popularite = 0;
@@ -20,6 +23,11 @@ public class Pirate {
 
 	public Pirate(String nom) {
 		this.nom = nom;
+		try {
+			random = new SecureRandom().getInstanceStrong();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Pioche getMain() {
@@ -61,11 +69,14 @@ public class Pirate {
 	}
 
 	public void jouerCarte(Pirate adversaire, Carte carteJouee) {
-
 		if (carteJouee instanceof CarteAttaque carteAttaque) {
 			attaquerPirate(adversaire, carteAttaque);
 		} else if (carteJouee instanceof CarteVole carteVole) {
 			volerCarte(adversaire, carteVole.getNbCartesVolables());
+		} else if (carteJouee instanceof CarteDenigrement carteDenigrement) {
+			denigrerPirate(adversaire, carteDenigrement);
+		} else if (carteJouee instanceof CartePileOuFace cartePileOuFace) {
+			jouerPileOuFace(adversaire, cartePileOuFace);
 		} else {
 			subirEffetCarte(carteJouee);
 		}
@@ -92,6 +103,24 @@ public class Pirate {
 			}
 		}
 
+	}
+
+	public void denigrerPirate(Pirate adversaire, CarteDenigrement carteJouee) {
+		adversaire.perdrePopularite(carteJouee.getPointsPopularite());
+		affichage.afficherEffetCarteDenigrement(nom, adversaire.getNom(), carteJouee.getPointsPopularite(),
+				adversaire.getPopularite());
+	}
+
+	public void jouerPileOuFace(Pirate adversaire, CartePileOuFace carteJouee) {
+		affichage.afficherEffetCartePileOuFace(nom);
+		if (random.nextInt(carteJouee.getProbabilite()) == 0) {
+			int pvAdverse = adversaire.getPV();
+			adversaire.perdreVie(pvAdverse);
+			affichage.afficherPerdreVie(adversaire.getNom(), pvAdverse, pvAdverse);
+		} else {
+			affichage.afficherPerdreVie(nom, pv, pv);
+			perdreVie(pv);
+		}
 	}
 
 	public void subirEffetCarte(Carte carte) {
@@ -129,8 +158,7 @@ public class Pirate {
 
 	public void perdrePopularite(int pointsPopularite) {
 		popularite -= pointsPopularite;
-		if (popularite < 0)
-			popularite = 0;
+
 	}
 
 	public boolean estMort() {

@@ -73,6 +73,19 @@ public class Affichage implements IAffichage {
 	public void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees) {
 		System.out.println("-- Le Pirate " + nomPirate + " a recupere " + pvRecuperees + " pv.");
 	}
+	
+	@Override
+	public void afficherEffetCartePileOuFace(String nomPirate) {
+		System.out.println("-- Le Pirate "+nomPirate+" remet sa vie dans les mains de la chance ! Qui va mourir lors de ce pile ou face ?\n");
+	}
+	
+	@Override
+	public void afficherEffetCarteDenigrement(String attaquant, String adversaire, int pointsPopularite,
+			int nouvellePopularite) {
+		System.out.println("--Le Pirate "+attaquant+" convainc l'équipage que "+adversaire+" ne mérite pas la victoire !\n"+pointsPopularite+" en moins pour "+ adversaire+".");
+		
+	}
+
 
 	@Override
 	public void afficherGagnerPartie(String nomPirate) {
@@ -139,4 +152,6 @@ public class Affichage implements IAffichage {
 		return cartesVolees;
 	}
 
+
+	
 }

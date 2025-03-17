@@ -59,26 +59,24 @@ public class Jeu {
 	}
 
 	public void preparerJeu() {
-		CartePopularite abordageReussi = new CartePopularite(TypeCarte.AbordageReussi, 0, 2,
-				"Au cours d'un abordage, le pirate fait preuve d'une grande bravoure et gagne deux points de popularité");
-		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DiscoursInspirant, 0, 1,
-				"Le discours inspirant du pirate a motivé son équipage et lui a fait gagner 1 point de popularité");
-		CartePopularite mainDeFer = new CartePopularite(TypeCarte.MainDeFer, 1, 2,
-				"En échange de 2 points de popularité, le pirate perd 1PV.");
+		CartePopularite abordageReussi = new CartePopularite(TypeCarte.AbordageReussi, 0, 2,"Au cours d'un abordage, le pirate fait preuve d'une grande bravoure et gagne deux points de popularité");
+		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DiscoursInspirant, 0, 1,"Le discours inspirant du pirate a motivé son équipage et lui a fait gagner 1 point de popularité");
+		CartePopularite mainDeFer = new CartePopularite(TypeCarte.MainDeFer, 1, 2,"En échange de 2 points de popularité, le pirate perd 1PV.");
 
-		CarteAttaque coupDeSabre = new CarteAttaque(TypeCarte.CoupDeSabre, 2,
-				"Le pirate attaque son adversaire pour lui infliger 2 points de dégats");
-		CarteVole carteVole = new CarteVole(TypeCarte.VoleDeCarte, 2,
-				"Le pirate rempli de malice vient voler 2 cartes à son adversaire");
+		CarteAttaque coupDeSabre = new CarteAttaque(TypeCarte.CoupDeSabre, 2,"Le pirate attaque son adversaire pour lui infliger 2 points de dégats");
+		CarteVole carteVole = new CarteVole(TypeCarte.VoleDeCarte, 2,"Le pirate rempli de malice vient voler 2 cartes à son adversaire");
 		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
-
-		pioche.remplirPioche(mainDeFer, 9);
-		pioche.remplirPioche(discoursInspirant, 9);
-		pioche.remplirPioche(coupDeSabre, 9);
-		pioche.remplirPioche(carteRegen, 9);
-		pioche.remplirPioche(abordageReussi, 9);
+		CarteDenigrement carteDenigrement = new CarteDenigrement(TypeCarte.LangueDeSerpent,"Le pirate vient dénigrer son adversaire et lui fait perdre 2 points de popularité",2);
+		CartePileOuFace cartePileOuFace = new CartePileOuFace(TypeCarte.PileOuFace,"Le pirate veut en finir avec la partie et décide de remettre son sort au pile ou face... Avec des probabilités truquées", 3);
+		
+		pioche.remplirPioche(mainDeFer, 8);
+		pioche.remplirPioche(discoursInspirant, 8);
+		pioche.remplirPioche(coupDeSabre, 7);
+		pioche.remplirPioche(carteRegen, 7);
+		pioche.remplirPioche(abordageReussi, 7);
 		pioche.remplirPioche(carteVole, 5);
-
+		pioche.remplirPioche(cartePileOuFace, 3);
+		pioche.remplirPioche(carteDenigrement, 5);
 		for (int i = 0; i < 3; i++) {
 			pirateBill.piocherCarte(this);
 			pirateJack.piocherCarte(this);

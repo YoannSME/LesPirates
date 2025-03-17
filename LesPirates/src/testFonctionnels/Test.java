@@ -1,6 +1,9 @@
 package testFonctionnels;
 
 import jeu.Jeu;
+
+import java.util.Random;
+
 import affichage.Affichage;
 import affichage.IAffichage;
 import cartes.*;
@@ -63,6 +66,8 @@ public class Test {
 		// test.testEchangerCartes();
 		test.testRemplirPioche();
 		test.testViderPioche();
+		Random random = new Random();
+		System.out.println(random.nextInt(3));
 
 	}
 
