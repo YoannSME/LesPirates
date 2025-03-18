@@ -21,7 +21,7 @@ public abstract class Carte {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public abstract void effetCarte(Pirate attaquant, Pirate victime);
 
 }

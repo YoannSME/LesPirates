@@ -53,15 +53,17 @@ public class Pioche {
 		pioche[nbCartes] = carte;
 		nbCartes = (nbCartes + 1) % (pioche.length + 1);
 	}
-	
+
 	public Carte retirerCarte(int index) {
-		assert (nbCartes > 0);
-		Carte carte = pioche[index];
-		for (int i = index; i < nbCartes - 1; i++) {
-			pioche[i] = pioche[i + 1];
+		Carte carte = null;
+		if (nbCartes > 0) {
+			carte = pioche[index];
+			for (int i = index; i < nbCartes - 1; i++) {
+				pioche[i] = pioche[i + 1];
+			}
+			pioche[nbCartes - 1] = null;
+			nbCartes--;
 		}
-		pioche[nbCartes - 1] = null;
-		nbCartes--;
 		return carte;
 	}
 
