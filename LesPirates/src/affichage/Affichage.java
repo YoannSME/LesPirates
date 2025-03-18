@@ -29,7 +29,7 @@ public class Affichage implements IAffichage {
 						.print("Choisissez une carte Ã  jouer : entre {" + 1 + " et " + nbCartes + "}" + "\n Choix : ");
 				choix = scanner.nextInt();
 			} catch (Exception e) {
-				System.out.println("Choix invalide, veuillez réessayer.");
+				System.out.println("Choix invalide, veuillez rï¿½essayer.");
 				scanner.nextLine();
 			}
 		} while (choix < 1 || choix > nbCartes);
@@ -127,10 +127,6 @@ public class Affichage implements IAffichage {
 			} while (dejaUtilise);
 			System.out.println("Carte : " + mainVictime[indicesCartes[i]]);
 		}
-		
-		for(int i = 0;i<indicesCartes.length;i++) {
-			System.out.println(mainVictime[indicesCartes[i]]);
-		}
 
 		return indicesCartes;
 	}
@@ -155,10 +151,6 @@ public class Affichage implements IAffichage {
 					}
 				}
 			} while (dejaUtilise || cartesVolees[i] < 0 || cartesVolees[i] > mainAttaquant.length);
-		}
-		
-		for(int i = 0;i<cartesVolees.length;i++) {
-			System.out.println(mainAttaquant[i]);
 		}
 		return cartesVolees;
 	}

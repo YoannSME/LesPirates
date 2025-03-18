@@ -68,13 +68,13 @@ public class Jeu {
 		CarteDenigrement carteDenigrement = new CarteDenigrement(TypeCarte.LANGUE_DE_SERPENT,"Le pirate vient dénigrer son adversaire et lui fait perdre 2 points de popularité",2);
 		CartePileOuFace cartePileOuFace = new CartePileOuFace(TypeCarte.PILE_OU_FACE,"Le pirate veut en finir avec la partie et décide de remettre son sort au pile ou face... Avec des probabilités truquées", 3);
 		
-		pioche.remplirPioche(mainDeFer, 8);
-		pioche.remplirPioche(discoursInspirant, 8);
-		pioche.remplirPioche(coupDeSabre, 7);
-		pioche.remplirPioche(carteRegen, 7);
-		pioche.remplirPioche(abordageReussi, 7);
-		pioche.remplirPioche(carteVol, 5);
-		pioche.remplirPioche(cartePileOuFace, 3);
+		pioche.remplirPioche(mainDeFer, 1);
+		pioche.remplirPioche(discoursInspirant, 0);
+		pioche.remplirPioche(coupDeSabre, 0);
+		pioche.remplirPioche(carteRegen, 0);
+		pioche.remplirPioche(abordageReussi, 20);
+		pioche.remplirPioche(carteVol, 20);
+		pioche.remplirPioche(cartePileOuFace, 0);
 		pioche.remplirPioche(carteDenigrement, 5);
 		
 		

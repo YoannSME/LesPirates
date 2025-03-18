@@ -22,8 +22,10 @@ public class CarteVol extends Carte {
 				victime.getMain().piocheToString(), cartesPrises);
 		for (int i = 0; i < nbCartesVolables; i++) {
 			if (cartesEchange[i] != 0) {
+				
 				Carte carteVolee = victime.getMain().getCarteAt(cartesPrises[i]);
 				Carte carteEchange = attaquant.getMain().getCarteAt(cartesEchange[i] - 1);
+				System.out.println("Carte de "+victime + carteEchange.getType() + "\n Carte de "+attaquant+carteEchange.getType());
 				victime.getMain().setCarteAt(carteEchange, cartesPrises[i]);
 				attaquant.getMain().setCarteAt(carteVolee, cartesEchange[i] - 1);
 			}

@@ -44,7 +44,7 @@ public class Pioche {
 	}
 
 	public void setCarteAt(Carte carte, int index) {
-		if (index >= 0 && index > nbCartes) {
+		if (index >= 0 && index < nbCartes) {
 			pioche[index] = carte;
 		}
 	}
