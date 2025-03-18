@@ -1,5 +1,7 @@
 package cartes;
 
+import pirate.Pirate;
+
 public class CarteRegeneration extends Carte {
 	private int pvRecuperees;
 
@@ -10,6 +12,12 @@ public class CarteRegeneration extends Carte {
 
 	public int getPvRecuperees() {
 		return pvRecuperees;
+	}
+
+	@Override
+	public void effetCarte(Pirate attaquant, Pirate victime) {
+		attaquant.gagnerVie(pvRecuperees);
+		affichage.afficherEffetCarteRegeneration(attaquant.getNom(), pvRecuperees);
 	}
 
 }

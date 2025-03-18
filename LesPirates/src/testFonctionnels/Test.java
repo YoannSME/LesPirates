@@ -40,14 +40,14 @@ public class Test {
 	}
 
 	public void testRemplirPioche() {
-		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
+		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.REGENERATION_HP, 2, "Le pirate récupère 2PV");
 		jeu.getPioche().remplirPioche(carteRegen, 50);
 		System.out.println(jeu.getPioche().getNbCartes());
 		System.out.println(jeu.getPioche().getNbCartes() == 50);
 	}
 
 	public void testViderPioche() {
-		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.RegenerationHP, 2, "Le pirate récupère 2PV");
+		CarteRegeneration carteRegen = new CarteRegeneration(TypeCarte.REGENERATION_HP, 2, "Le pirate récupère 2PV");
 		jeu = new Jeu();
 		jeu.getPioche().remplirPioche(carteRegen, 20);
 
@@ -63,11 +63,11 @@ public class Test {
 
 		Test test = new Test();
 
-		// test.testEchangerCartes();
-		test.testRemplirPioche();
-		test.testViderPioche();
-		Random random = new Random();
-		System.out.println(random.nextInt(3));
+		test.testEchangerCartes();
+		//test.testRemplirPioche();
+		//test.testViderPioche();
+		//Random random = new Random();
+		//System.out.println(random.nextInt(3));
 
 	}
 

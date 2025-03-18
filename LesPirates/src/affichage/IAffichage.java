@@ -20,15 +20,16 @@ public interface IAffichage {
 			int pv);
 
 	void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees);
+
 	void afficherEffetCartePileOuFace(String nomPirate);
+
 	void afficherGagnerPartie(String nomPirate);
-	void afficherEffetCarteDenigrement(String attaquant,String adversaire,int pointsPopularite,int nouvellePopularite);
+
+	void afficherEffetCarteDenigrement(String attaquant, String adversaire, int pointsPopularite);
 
 	void afficherDebutTour(String nomPirate);
 
 	void afficherFinTour(String nomPirate, int pvPirate, int popularitePirate);
-	
-	
 
 	int[] recupererCartesVolables(int nbCartesVolees, String[] mainVictime, String nomVictime);
 

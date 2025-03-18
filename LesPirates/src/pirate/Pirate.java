@@ -69,77 +69,8 @@ public class Pirate {
 	}
 
 	public void jouerCarte(Pirate adversaire, Carte carteJouee) {
-		if (carteJouee instanceof CarteAttaque carteAttaque) {
-			attaquerPirate(adversaire, carteAttaque);
-		} else if (carteJouee instanceof CarteVole carteVole) {
-			volerCarte(adversaire, carteVole.getNbCartesVolables());
-		} else if (carteJouee instanceof CarteDenigrement carteDenigrement) {
-			denigrerPirate(adversaire, carteDenigrement);
-		} else if (carteJouee instanceof CartePileOuFace cartePileOuFace) {
-			jouerPileOuFace(adversaire, cartePileOuFace);
-		} else {
-			subirEffetCarte(carteJouee);
-		}
-
-	}
-
-	public void attaquerPirate(Pirate cible, CarteAttaque carte) {
-		affichage.afficherAttaquePirate(nom, cible.getNom());
-		cible.subirEffetCarte(carte);
-	}
-
-	public void volerCarte(Pirate cible, int nbCartesVolees) {
-		int[] cartesPrises = affichage.recupererCartesVolables(nbCartesVolees, cible.getMain().piocheToString(),
-				cible.getNom());
-		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolees, main.piocheToString(), nom,
-				cible.getMain().piocheToString(), cartesPrises);
-
-		for (int i = 0; i < nbCartesVolees; i++) {
-			if (cartesEchange[i] != 0) {
-				Carte carteVolee = cible.getMain().getCarteAt(cartesPrises[i]);
-				Carte carteEchange = this.main.getCarteAt(cartesEchange[i] - 1);
-				cible.getMain().setCarteAt(carteEchange, cartesPrises[i]);
-				this.main.setCarteAt(carteVolee, cartesEchange[i] - 1);
-			}
-		}
-
-	}
-
-	public void denigrerPirate(Pirate adversaire, CarteDenigrement carteJouee) {
-		adversaire.perdrePopularite(carteJouee.getPointsPopularite());
-		affichage.afficherEffetCarteDenigrement(nom, adversaire.getNom(), carteJouee.getPointsPopularite(),
-				adversaire.getPopularite());
-	}
-
-	public void jouerPileOuFace(Pirate adversaire, CartePileOuFace carteJouee) {
-		affichage.afficherEffetCartePileOuFace(nom);
-		if (random.nextInt(carteJouee.getProbabilite()) == 0) {
-			int pvAdverse = adversaire.getPV();
-			adversaire.perdreVie(pvAdverse);
-			affichage.afficherPerdreVie(adversaire.getNom(), pvAdverse, pvAdverse);
-		} else {
-			affichage.afficherPerdreVie(nom, pv, pv);
-			perdreVie(pv);
-		}
-	}
-
-	public void subirEffetCarte(Carte carte) {
-		if (carte instanceof CartePopularite cartePopularite) {
-			zonePopularite.ajouterCarte(cartePopularite);
-			gagnerPopularite(cartePopularite.getNbPopularite());
-			perdreVie(cartePopularite.getNbDegats());
-			affichage.afficherEffetCartePopularite(nom, cartePopularite.getNbPopularite(),
-					cartePopularite.getNbDegats(), popularite, pv);
-		}
-		if (carte instanceof CarteAttaque carteAttaque) {
-			zoneAttaque.ajouterCarte(carteAttaque);
-			perdreVie(carteAttaque.getNbDegats());
-			affichage.afficherPerdreVie(nom, carteAttaque.getNbDegats(), pv);
-		}
-		if (carte instanceof CarteRegeneration carteRegeneration) {
-			gagnerVie(carteRegeneration.getPvRecuperees());
-			affichage.afficherEffetCarteRegeneration(nom, carteRegeneration.getPvRecuperees());
-		}
+		
+		carteJouee.effetCarte(this, adversaire);
 	}
 
 	public void perdreVie(int vie) {
@@ -151,7 +82,7 @@ public class Pirate {
 	public void gagnerVie(int vie) {
 		pv += vie;
 	}
-
+	
 	public void gagnerPopularite(int pointsPopularite) {
 		popularite += pointsPopularite;
 	}

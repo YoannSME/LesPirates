@@ -1,6 +1,13 @@
 package cartes;
 
 public enum TypeCarte {
-	AbordageReussi, DiscoursInspirant, MainDeFer, CoupDeSabre, VoleDeCarte, RegenerationHP,LangueDeSerpent,PileOuFace;
+	ABORDAGE_REUSSI,
+	DISCOURS_INSPIRANT,
+	MAIN_DE_FER,
+	COUP_DE_SABRE,
+	VOL_DE_CARTE,
+	REGENERATION_HP,
+	LANGUE_DE_SERPENT,
+	PILE_OU_FACE;
 
 }

@@ -8,7 +8,7 @@ import cartes.TypeCarte;
 public class Affichage implements IAffichage {
 
 	private Scanner scanner = new Scanner(System.in);
-	private Random random = new Random();
+	public static final Random random = new Random();
 
 	@Override
 	public void afficherMain(String[] main) {
@@ -22,10 +22,16 @@ public class Affichage implements IAffichage {
 
 	@Override
 	public int afficherChoisirCarte(int nbCartes) {
-		int choix;
+		int choix = 0;
 		do {
-			System.out.print("Choisissez une carte à jouer : entre {" + 1 + " et " + nbCartes + "}" + "\n Choix : ");
-			choix = scanner.nextInt();
+			try {
+				System.out
+						.print("Choisissez une carte à jouer : entre {" + 1 + " et " + nbCartes + "}" + "\n Choix : ");
+				choix = scanner.nextInt();
+			} catch (Exception e) {
+				System.out.println("Choix invalide, veuillez r�essayer.");
+				scanner.nextLine();
+			}
 		} while (choix < 1 || choix > nbCartes);
 		return choix;
 	}
@@ -73,19 +79,19 @@ public class Affichage implements IAffichage {
 	public void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees) {
 		System.out.println("-- Le Pirate " + nomPirate + " a recupere " + pvRecuperees + " pv.");
 	}
-	
+
 	@Override
 	public void afficherEffetCartePileOuFace(String nomPirate) {
-		System.out.println("-- Le Pirate "+nomPirate+" remet sa vie dans les mains de la chance ! Qui va mourir lors de ce pile ou face ?\n");
-	}
-	
-	@Override
-	public void afficherEffetCarteDenigrement(String attaquant, String adversaire, int pointsPopularite,
-			int nouvellePopularite) {
-		System.out.println("--Le Pirate "+attaquant+" convainc l'équipage que "+adversaire+" ne mérite pas la victoire !\n"+pointsPopularite+" en moins pour "+ adversaire+".");
-		
+		System.out.println("-- Le Pirate " + nomPirate
+				+ " remet sa vie dans les mains de la chance ! Qui va mourir lors de ce pile ou face ?\n");
 	}
 
+	@Override
+	public void afficherEffetCarteDenigrement(String attaquant, String adversaire, int pointsPopularite) {
+		System.out.println("--Le Pirate " + attaquant + " convainc l'équipage que " + adversaire
+				+ " ne mérite pas la victoire !\n" + pointsPopularite + " en moins pour " + adversaire + ".");
+
+	}
 
 	@Override
 	public void afficherGagnerPartie(String nomPirate) {
@@ -121,6 +127,10 @@ public class Affichage implements IAffichage {
 			} while (dejaUtilise);
 			System.out.println("Carte : " + mainVictime[indicesCartes[i]]);
 		}
+		
+		for(int i = 0;i<indicesCartes.length;i++) {
+			System.out.println(mainVictime[indicesCartes[i]]);
+		}
 
 		return indicesCartes;
 	}
@@ -128,9 +138,7 @@ public class Affichage implements IAffichage {
 	@Override
 	public int[] recupererCartesEchangees(int nbCartesVolees, String[] mainAttaquant, String nomAttaquant,
 			String[] mainVictime, int[] indicesCartesVolables) {
-
 		int[] cartesVolees = new int[nbCartesVolees];
-
 		System.out.println("\nVoici votre main : ");
 		afficherMain(mainAttaquant);
 		for (int i = 0; i < nbCartesVolees; i++) {
@@ -148,10 +156,11 @@ public class Affichage implements IAffichage {
 				}
 			} while (dejaUtilise || cartesVolees[i] < 0 || cartesVolees[i] > mainAttaquant.length);
 		}
-
+		
+		for(int i = 0;i<cartesVolees.length;i++) {
+			System.out.println(mainAttaquant[i]);
+		}
 		return cartesVolees;
 	}
 
-
-	
 }
