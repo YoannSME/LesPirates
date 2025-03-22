@@ -23,10 +23,10 @@ public class CartePopularite extends Carte {
 	@Override
 	public void effetCarte(Pirate attaquant, Pirate victime) {
 		attaquant.gagnerPopularite(pointsPopularite);
-		attaquant.perdrePopularite(nbDegats);
-		affichage.afficherEffetCartePopularite(attaquant.getNom(), pointsPopularite, nbDegats,
+		attaquant.perdreVie(nbDegats);
+		affichage.afficherEffetCartePopularite(attaquant.toString(), pointsPopularite, nbDegats,
 				attaquant.getPopularite(), attaquant.getPV());
-		attaquant.getZonePopularite().ajouterCarte(this);
+		attaquant.getZonePopularite().ajouterCarteAvecEcrasement(this);
 	}
 
 }

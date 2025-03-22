@@ -17,9 +17,9 @@ public class CarteVol extends Carte {
 	@Override
 	public void effetCarte(Pirate attaquant, Pirate victime) {
 		int[] cartesPrises = affichage.recupererCartesVolables(nbCartesVolables, victime.getMain().piocheToString(),
-				victime.getNom());
+				victime.toString());
 		int[] cartesEchange = affichage.recupererCartesEchangees(nbCartesVolables, attaquant.getMain().piocheToString(),
-				attaquant.getNom(), victime.getMain().piocheToString(), cartesPrises);
+				attaquant.toString(), victime.getMain().piocheToString(), cartesPrises);
 		for (int i = 0; i < nbCartesVolables; i++) {
 			if (cartesEchange[i] != 0) {
 				Carte carteVolee = victime.getMain().getCarteAt(cartesPrises[i]);

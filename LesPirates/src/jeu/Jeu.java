@@ -12,7 +12,7 @@ import pioche.Pioche;
 
 public class Jeu {
 	private Random random;
-	private IAffichage affichage = new Affichage();
+	private static final IAffichage affichage = new Affichage();
 	private Pirate pirateJack = new Pirate("Jack le Borgne");
 	private Pirate pirateBill = new Pirate("Bill Jambe-de-Bois");
 
@@ -20,45 +20,22 @@ public class Jeu {
 
 	public Jeu() {
 		try {
-			random = new SecureRandom().getInstanceStrong();
+			random = SecureRandom.getInstanceStrong();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
+	public static IAffichage getAffichage() {
+		return affichage;
+	}
+
 	public Pioche getPioche() {
 		return pioche;
 	}
 
-	public void tourDeJeu(Pirate pirateJoueur, Pirate pirateAdverse) {
-		pirateJoueur.piocherCarte(this);
-		affichage.afficherDebutTour(pirateJoueur.getNom());
-		affichage.afficherMain(pirateJoueur.getMain().piocheToString());
-		Carte carteAjouer = pirateJoueur.choisirCarteAJouer();
-		affichage.afficherDetailCarte(carteAjouer.getType(), carteAjouer.getDescription());
-		pirateJoueur.jouerCarte(pirateAdverse, carteAjouer);
-		affichage.afficherFinTour(pirateJoueur.getNom(), pirateJoueur.getPV(), pirateJoueur.getPopularite());
-		affichage.afficherFinTour(pirateAdverse.getNom(), pirateAdverse.getPV(), pirateAdverse.getPopularite());
-	}
-
-	public Pirate choisirPremierJoueur(Pirate pirate1, Pirate pirate2) {
-		if (random.nextInt(0, 2) % 2 == 0) {
-			return pirate1;
-		}
-		return pirate2;
-	}
-
-	public Pirate pirateGagnant(Pirate pirateCourant, Pirate pirateAdverse) {
-		Pirate gagnant = null;
-		if (pirateCourant.estAssezPopulaire() || pirateAdverse.estMort())
-			gagnant = pirateCourant;
-		if (pirateAdverse.estAssezPopulaire() || pirateCourant.estMort())
-			gagnant = pirateAdverse;
-		return gagnant;
-	}
-
-	public void preparerJeu() {
+	public void initialiserPioche() {
 		CartePopularite abordageReussi = new CartePopularite(TypeCarte.ABORDAGE_REUSSI, 0, 2,
 				"Au cours d'un abordage, le pirate fait preuve d'une grande bravoure et gagne deux points de popularité");
 		CartePopularite discoursInspirant = new CartePopularite(TypeCarte.DISCOURS_INSPIRANT, 0, 1,
@@ -75,15 +52,53 @@ public class Jeu {
 		CartePileOuFace cartePileOuFace = new CartePileOuFace(TypeCarte.PILE_OU_FACE,
 				"Le pirate veut en finir avec la partie et décide de remettre son sort au pile ou face... Avec des probabilités truquées",
 				3);
+		CarteSwitch carteSwitch = new CarteSwitch(TypeCarte.SWITCH,
+				"Le pirate échange son destin avec celui de son adversaire.");
 
-		pioche.remplirPioche(mainDeFer, 7);
-		pioche.remplirPioche(discoursInspirant, 7);
+		pioche.remplirPioche(mainDeFer, 6);
+		pioche.remplirPioche(discoursInspirant, 6);
 		pioche.remplirPioche(coupDeSabre, 7);
 		pioche.remplirPioche(carteRegen, 7);
 		pioche.remplirPioche(abordageReussi, 7);
 		pioche.remplirPioche(carteVol, 5);
 		pioche.remplirPioche(cartePileOuFace, 3);
 		pioche.remplirPioche(carteDenigrement, 7);
+		pioche.remplirPioche(carteSwitch, 2);
+
+	}
+
+	public void tourDeJeu(Pirate pirateJoueur, Pirate pirateAdverse) {
+		if (pioche.getNbCartes() <= 1) {
+			initialiserPioche();
+		}
+		pirateJoueur.piocherCarte(this);
+		affichage.afficherDebutTour(pirateJoueur.getNom());
+		affichage.afficherMain(pirateJoueur.getMain().piocheToString());
+		Carte carteAjouer = pirateJoueur.choisirCarteAJouer();
+		affichage.afficherDetailCarte(carteAjouer.getType(), carteAjouer.getDescription());
+		pirateJoueur.jouerCarte(pirateAdverse, carteAjouer);
+		affichage.afficherFinTour(pirateJoueur.toString(), pirateJoueur.getPV(), pirateJoueur.getPopularite());
+		affichage.afficherFinTour(pirateAdverse.toString(), pirateAdverse.getPV(), pirateAdverse.getPopularite());
+	}
+
+	public Pirate choisirPremierJoueur(Pirate pirate1, Pirate pirate2) {
+		if (random.nextInt(0, 2) % 2 == 0) {
+			return pirate1;
+		}
+		return pirate2;
+	}
+
+	public Pirate pirateGagnant(Pirate pirateCourant, Pirate pirateAdverse) {
+		Pirate gagnant = null;
+		if (pirateCourant.estAssezPopulaire() || pirateAdverse.estMort())
+			gagnant = pirateCourant;
+		else if (pirateAdverse.estAssezPopulaire() || pirateCourant.estMort())
+			gagnant = pirateAdverse;
+		return gagnant;
+	}
+
+	public void preparerJeu() {
+		initialiserPioche();
 
 		for (int i = 0; i < 3; i++) {
 			pirateBill.piocherCarte(this);
@@ -92,7 +107,6 @@ public class Jeu {
 
 	}
 
-	
 	public void lancerJeu() {
 
 		preparerJeu();
@@ -108,13 +122,13 @@ public class Jeu {
 			if (gagnant != null)
 				partieFinie = true;
 			else {
-				 	Pirate temp = premierPirate;
-				 	premierPirate = deuxiemePirate;
-				 	deuxiemePirate = temp;
+				Pirate temp = premierPirate;
+				premierPirate = deuxiemePirate;
+				deuxiemePirate = temp;
 			}
 
 		}
-		affichage.afficherGagnerPartie(gagnant.getNom());
+		affichage.afficherGagnerPartie(gagnant.toString());
 
 	}
 

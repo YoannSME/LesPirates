@@ -1,14 +1,24 @@
 package affichage;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.Scanner;
 
 import cartes.TypeCarte;
+import jeu.Jeu;
 
 public class Affichage implements IAffichage {
 
 	private Scanner scanner = new Scanner(System.in);
-	public static final Random random = new Random();
+	private Random random;
+
+	public Affichage() {
+		try {
+			random = SecureRandom.getInstanceStrong();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void afficherMain(String[] main) {
@@ -62,7 +72,7 @@ public class Affichage implements IAffichage {
 
 	@Override
 	public void afficherPerdreVie(String nomPirate, int degats, int pv) {
-		System.out.println("-- Le Pirate " + nomPirate + " a perdu " + degats + "PV.");
+		System.out.println("-- " + nomPirate + " a perdu " + degats + "PV.");
 		if (pv <= 0)
 			System.out.println(nomPirate + " Est mort.");
 	}
@@ -70,38 +80,44 @@ public class Affichage implements IAffichage {
 	@Override
 	public void afficherEffetCartePopularite(String nomPirate, int nbPopulariteCarte, int nbDegats,
 			int nbPopularitePirate, int pv) {
-		System.out.println("-- Le Pirate " + nomPirate + " a gagne " + nbPopulariteCarte
+		System.out.println("-- " + nomPirate + " a gagne " + nbPopulariteCarte
 				+ " point(s) de popularité en échange de " + nbDegats + " PV." + " Nouvelle popularité : "
 				+ nbPopularitePirate + ",nouveau nombre de pv " + pv);
 	}
 
 	@Override
 	public void afficherEffetCarteRegeneration(String nomPirate, int pvRecuperees) {
-		System.out.println("-- Le Pirate " + nomPirate + " a recupere " + pvRecuperees + " pv.");
+		System.out.println("-- " + nomPirate + " a recupere " + pvRecuperees + " pv.");
 	}
 
 	@Override
 	public void afficherEffetCartePileOuFace(String nomPirate) {
-		System.out.println("-- Le Pirate " + nomPirate
+		System.out.println("-- " + nomPirate
 				+ " remet sa vie dans les mains de la chance ! Qui va mourir lors de ce pile ou face ?\n");
 	}
 
 	@Override
 	public void afficherEffetCarteDenigrement(String attaquant, String adversaire, int pointsPopularite) {
-		System.out.println("--Le Pirate " + attaquant + " convainc l'équipage que " + adversaire
+		System.out.println("-- " + attaquant + " convainc l'équipage que " + adversaire
 				+ " ne mérite pas la victoire !\n" + pointsPopularite + " en moins pour " + adversaire + ".");
+	}
 
+	@Override
+	public void afficherEffetCarteSwitch(String attaquant, String victime) {
+		System.out.println("Coup de théâtre ! " + attaquant
+				+ " utilise une carte spéciale pour échanger son destin avec " + victime + " !");
+		System.out.println("PV, popularité, cartes en main... tout a été inversé !");
 	}
 
 	@Override
 	public void afficherGagnerPartie(String nomPirate) {
-		System.out.println("Partie finie, le pirate " + nomPirate + " a gagné cet affrontement.");
+		System.out.println("Partie finie, " + nomPirate + " a gagné cet affrontement.");
 	}
 
 	@Override
 	public void afficherDebutTour(String nomPirate) {
 		System.out.println("_".repeat(150));
-		System.out.println("Debut du tour de jeu du Pirate : " + nomPirate);
+		System.out.println("Debut du tour de jeu de : " + nomPirate);
 	}
 
 	@Override

@@ -1,18 +1,13 @@
 package pirate;
 
-import java.security.SecureRandom;
-import java.util.Random;
-
-import affichage.Affichage;
 import affichage.IAffichage;
 import cartes.*;
 import jeu.Jeu;
 import pioche.Pioche;
 
 public class Pirate {
-	private IAffichage affichage = new Affichage();
-	private Random random;
-	public static final int TAILLE_MAX = 5;
+	private IAffichage affichage = Jeu.getAffichage();
+	private static final int TAILLE_MAX = 5;
 	private int pv = 5;
 	private int popularite = 0;
 	private String nom;
@@ -23,15 +18,14 @@ public class Pirate {
 
 	public Pirate(String nom) {
 		this.nom = nom;
-		try {
-			random = new SecureRandom().getInstanceStrong();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public Pioche getMain() {
 		return main;
+	}
+
+	public void setMain(Pioche main) {
+		this.main = main;
 	}
 
 	public Pioche getZonePopularite() {
@@ -42,8 +36,26 @@ public class Pirate {
 		return zoneAttaque;
 	}
 
+	public void setPv(int pv) {
+		this.pv = pv;
+	}
+
+	public void setPopularite(int popularite) {
+		this.popularite = popularite;
+	}
+
+	public void setZonePopularite(Pioche zonePopularite) {
+		this.zonePopularite = zonePopularite;
+
+	}
+
+	public void setZoneAttaque(Pioche zoneAttaque) {
+		this.zoneAttaque = zoneAttaque;
+
+	}
+
 	public String toString() {
-		return "Le Pirate " + nom;
+		return "Le Pirate : " + nom;
 	}
 
 	public String getNom() {
@@ -60,7 +72,7 @@ public class Pirate {
 
 	public void piocherCarte(Jeu jeu) {
 		Carte cartePiochee = jeu.getPioche().piocherCarte();
-		main.ajouterCarte(cartePiochee);
+		main.ajouterCarteSansEcrasement(cartePiochee);
 	}
 
 	public Carte choisirCarteAJouer() {
@@ -69,7 +81,6 @@ public class Pirate {
 	}
 
 	public void jouerCarte(Pirate adversaire, Carte carteJouee) {
-		
 		carteJouee.effetCarte(this, adversaire);
 	}
 
@@ -82,7 +93,7 @@ public class Pirate {
 	public void gagnerVie(int vie) {
 		pv += vie;
 	}
-	
+
 	public void gagnerPopularite(int pointsPopularite) {
 		popularite += pointsPopularite;
 	}
@@ -97,7 +108,7 @@ public class Pirate {
 	}
 
 	public boolean estAssezPopulaire() {
-		return popularite >= 5;
+		return popularite >= 5 && !estMort();
 	}
 
 }

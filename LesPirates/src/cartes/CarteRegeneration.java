@@ -17,7 +17,7 @@ public class CarteRegeneration extends Carte {
 	@Override
 	public void effetCarte(Pirate attaquant, Pirate victime) {
 		attaquant.gagnerVie(pvRecuperees);
-		affichage.afficherEffetCarteRegeneration(attaquant.getNom(), pvRecuperees);
+		affichage.afficherEffetCarteRegeneration(attaquant.toString(), pvRecuperees);
 	}
 
 }

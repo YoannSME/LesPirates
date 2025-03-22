@@ -27,6 +27,7 @@ public interface IAffichage {
 
 	void afficherEffetCarteDenigrement(String attaquant, String adversaire, int pointsPopularite);
 
+	void afficherEffetCarteSwitch(String attaquant, String adversaire);
 	void afficherDebutTour(String nomPirate);
 
 	void afficherFinTour(String nomPirate, int pvPirate, int popularitePirate);

@@ -16,10 +16,10 @@ public class CarteAttaque extends Carte {
 
 	@Override
 	public void effetCarte(Pirate attaquant, Pirate victime) {
-		affichage.afficherAttaquePirate(attaquant.getNom(), victime.getNom());
+		affichage.afficherAttaquePirate(attaquant.toString(), victime.getNom());
 		victime.perdreVie(nbDegats);
-		affichage.afficherPerdreVie(victime.getNom(), nbDegats, victime.getPV());
-		victime.getZoneAttaque().ajouterCarte(this);
+		affichage.afficherPerdreVie(victime.toString(), nbDegats, victime.getPV());
+		victime.getZoneAttaque().ajouterCarteAvecEcrasement(this);
 	}
 
 }

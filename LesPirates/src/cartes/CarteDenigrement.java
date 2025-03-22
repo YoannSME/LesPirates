@@ -17,7 +17,7 @@ public class CarteDenigrement extends Carte {
 	@Override
 	public void effetCarte(Pirate attaquant, Pirate victime) {
 		victime.perdrePopularite(pointsPopularite);
-		affichage.afficherEffetCarteDenigrement(attaquant.getNom(), victime.getNom(), pointsPopularite);
+		affichage.afficherEffetCarteDenigrement(attaquant.toString(), victime.toString(), pointsPopularite);
 	}
 
 }

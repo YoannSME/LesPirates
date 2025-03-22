@@ -6,22 +6,25 @@ import java.util.Random;
 import cartes.Carte;
 
 public class Pioche {
-	private Carte[] pioche;
+	private Carte[] tabCartes;
 	private int nbCartes = 0;
+	private int tailleMax;
 	private Random random;
 
 	public Pioche(int tailleMax) {
-		this.pioche = new Carte[tailleMax];
+		this.tailleMax = tailleMax;
+		this.tabCartes = new Carte[tailleMax];
 		try {
-			random = new SecureRandom().getInstanceStrong();
+			random = SecureRandom.getInstanceStrong();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public Carte[] getPioche() {
-		return pioche;
+		return tabCartes;
 	}
+	
 
 	public int getNbCartes() {
 		return nbCartes;
@@ -30,7 +33,7 @@ public class Pioche {
 	public String[] piocheToString() {
 		String[] retour = new String[nbCartes];
 		for (int i = 0; i < nbCartes; i++) {
-			retour[i] = "" + pioche[i].getType();
+			retour[i] = "" + tabCartes[i].getType().getNom();
 		}
 		return retour;
 	}
@@ -38,30 +41,41 @@ public class Pioche {
 	public Carte getCarteAt(int index) {
 		Carte carteRetour = null;
 		if (index >= 0 && index < nbCartes) {
-			carteRetour = pioche[index];
+			carteRetour = tabCartes[index];
 		}
 		return carteRetour;
 	}
 
 	public void setCarteAt(Carte carte, int index) {
 		if (index >= 0 && index < nbCartes) {
-			pioche[index] = carte;
+			tabCartes[index] = carte;
 		}
 	}
 
-	public void ajouterCarte(Carte carte) {
-		pioche[nbCartes] = carte;
-		nbCartes = (nbCartes + 1) % (pioche.length + 1);
+	public boolean ajouterCarteSansEcrasement(Carte carte) {
+		boolean isAdded = false;
+		if(nbCartes<tailleMax) {
+			tabCartes[nbCartes] = carte;
+			nbCartes++;
+			isAdded = true;
+		}
+		return isAdded;
+		
+	}
+	public void ajouterCarteAvecEcrasement(Carte carte) {
+		tabCartes[nbCartes] = carte;
+		nbCartes = (nbCartes + 1) % (tailleMax + 1);
+		
 	}
 
 	public Carte retirerCarte(int index) {
 		Carte carte = null;
 		if (nbCartes > 0) {
-			carte = pioche[index];
+			carte = tabCartes[index];
 			for (int i = index; i < nbCartes - 1; i++) {
-				pioche[i] = pioche[i + 1];
+				tabCartes[i] = tabCartes[i + 1];
 			}
-			pioche[nbCartes - 1] = null;
+			tabCartes[nbCartes - 1] = null;
 			nbCartes--;
 		}
 		return carte;
@@ -69,7 +83,7 @@ public class Pioche {
 
 	public void remplirPioche(Carte carte, int occurence) {
 		for (int i = 0; i < occurence; i++) {
-			ajouterCarte(carte);
+			ajouterCarteSansEcrasement(carte);
 		}
 	}
 
@@ -77,11 +91,11 @@ public class Pioche {
 		Carte cartePiochee = null;
 		if (nbCartes > 0) {
 			int index = random.nextInt(nbCartes);
-			cartePiochee = pioche[index];
+			cartePiochee = tabCartes[index];
 			for (int i = index; i < nbCartes - 1; i++) {
-				pioche[i] = pioche[i + 1];
+				tabCartes[i] = tabCartes[i + 1];
 			}
-			pioche[nbCartes - 1] = null;
+			tabCartes[nbCartes - 1] = null;
 			nbCartes--;
 		}
 		return cartePiochee;
